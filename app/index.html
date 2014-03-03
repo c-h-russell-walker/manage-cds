@@ -49,13 +49,21 @@
                 CD Collection (<span data-bind="text: cds().length"></span>)
             </div>
 
-            <div class="row">
-                <div class="col-lg-6">
-                    <ul data-bind="foreach: cds">
-                        <li data-bind="text: $data.title + ' - ' + $data.band + ' (' + $data.releaseDate + ')'"></li>
-                    </ul>
-                </div>
-            </div>
+            <table>
+                <thead><tr>
+                    <th>Album</th><th>Artist</th><th>Release Date</th><th></th>
+                </tr></thead>
+                <tbody data-bind="foreach: cds">
+                    <tr>
+                        <td><input data-bind="value: album" /></td>
+                        <td><input data-bind="value: artist" /></td>
+                        <td><input data-bind="value: releaseDate" /></td>
+                        <td><a href="#" data-bind="click: $root.removeCd">Remove</a></td>
+                    </tr>    
+                </tbody>
+            </table>
+
+            <button data-bind="click: addCd" class="btn-lg">Add a CD to your collection</button>
 
             <div class="footer">
                 <p>♥ with help from Yeoman</p>
