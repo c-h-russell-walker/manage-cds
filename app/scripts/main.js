@@ -2,6 +2,7 @@ require.config({
     paths: {
         jquery: '../bower_components/jquery/jquery',
         knockout: '../bower_components/knockout/build/output/knockout-latest.debug',
+        underscore: '../bower_components/underscore/underscore',
         bootstrapAffix: '../bower_components/bootstrap-sass/vendor/assets/javascripts/bootstrap/affix',
         bootstrapAlert: '../bower_components/bootstrap-sass/vendor/assets/javascripts/bootstrap/alert',
         bootstrapButton: '../bower_components/bootstrap-sass/vendor/assets/javascripts/bootstrap/button',
