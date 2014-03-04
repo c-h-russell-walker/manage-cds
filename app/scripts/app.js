@@ -1,5 +1,5 @@
 'use strict';
-require(['jquery', 'knockout', 'underscore'], function(jquery, ko, underscore) {
+define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
 
     console.log(underscore);
 
@@ -31,7 +31,8 @@ require(['jquery', 'knockout', 'underscore'], function(jquery, ko, underscore) {
 
         self.addCd = function() {
             // self.cds.push(new CdModel('', new Artist(''), ''));
-            self.cds.push(new CdModel('', '', ''));
+            self.cds.push(new CdModel($('#album').val(), $('#artist').val(), $('#releaseDate').val()));
+            $('#windowTitleDialog').modal('hide');
         };
 
         self.removeCd = function(cd) {
@@ -40,4 +41,5 @@ require(['jquery', 'knockout', 'underscore'], function(jquery, ko, underscore) {
     };
 
     ko.applyBindings(new CollectionModel());
+
 });
