@@ -3,6 +3,7 @@ require.config({
         jquery: '../bower_components/jquery/jquery',
         knockout: '../bower_components/knockout/build/output/knockout-latest.debug',
         underscore: '../bower_components/underscore/underscore',
+        bootstrap: '../bower_components/bootstrap/dist/js/bootstrap',
         bootstrapAffix: '../bower_components/bootstrap-sass/vendor/assets/javascripts/bootstrap/affix',
         bootstrapAlert: '../bower_components/bootstrap-sass/vendor/assets/javascripts/bootstrap/alert',
         bootstrapButton: '../bower_components/bootstrap-sass/vendor/assets/javascripts/bootstrap/button',
@@ -56,10 +57,11 @@ require.config({
     }
 });
 
-require(['app', 'jquery', 'knockout'], function (app, $, ko) {
+require(['app', 'jquery', 'knockout', 'bootstrap'], function (app, $, ko, bootstrap) {
     'use strict';
     // use app here
     console.log(app);
     console.log('Running Knockout %s', ko.version);
     console.log('Running jQuery %s', $().jquery);
+    console.log(bootstrap);
 });
