@@ -1,7 +1,7 @@
 require.config({
     paths: {
         app: '../scripts/app',
-        require: '../bower_components/require/require',
+        require: '../bower_components/requirejs/require',
         jquery: '../bower_components/jquery/jquery',
         knockout: '../bower_components/knockout/build/output/knockout-latest.debug',
         underscore: '../bower_components/underscore/underscore',
@@ -20,6 +20,9 @@ require.config({
         bootstrapTransition: '../bower_components/bootstrap-sass/vendor/assets/javascripts/bootstrap/transition'
     },
     shim: {
+        bootstrap: {
+            deps: ['jquery']
+        },
         bootstrapAffix: {
             deps: ['jquery']
         },
@@ -61,8 +64,9 @@ require.config({
 
 require(['app', 'require', 'jquery', 'knockout', 'underscore', 'bootstrap'], function (app, require, jQuery, ko, underscore, bootstrap) {
     'use strict';
+    console.log(this);
     // use app here
-    // console.log(app);
+    console.log(app);
     console.log(require);
     console.log(underscore);
     console.log('Running Knockout %s', ko.version);
