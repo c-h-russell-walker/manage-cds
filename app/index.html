@@ -73,30 +73,32 @@
 
         <div id="windowTitleDialog" class="modal fade">
             <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title">Add a CD</h4><!-- @todo - make this form work as an edit form as well -->
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="album">Album:</label>
-                            <input type="text"class="form-control" id="album"/></td>
+                <form data-bind="submit: addCd">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title">Add a CD</h4><!-- @todo - make this form work as an edit form as well -->
                         </div>
-                        <div class="form-group">
-                            <label for="artist">Artist:</label>
-                            <input type="text"class="form-control" id="artist" /></td>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="album">Album:</label>
+                                <input type="text" class="form-control" id="album" data-bind="value: albumInput" /></td>
+                            </div>
+                            <div class="form-group">
+                                <label for="artist">Artist:</label>
+                                <input type="text" class="form-control" id="artist" data-bind="value: artistInput" /></td>
+                            </div>
+                            <div class="form-group">
+                                <label for="releaseDate">Release Date:</label>
+                                <input type="text" class="form-control" id="releaseDate" data-bind="value: releaseDateInput" /><!-- @todo - make this a year dropdown -->
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="releaseDate">Release Date:</label>
-                            <input type="text"class="form-control" id="releaseDate" /><!-- @todo - make this a year dropdown -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button data-bind="click: addCd" type="button" class="btn btn-lg">Save CD</button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button data-bind="click: addCd" type="button" class="btn btn-lg">Save CD</button>
-                    </div>
-                </div><!-- /.modal-content -->
+                    </div><!-- /.modal-content -->
+                </form>
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 

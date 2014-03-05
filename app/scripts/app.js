@@ -19,6 +19,9 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
     
     var CollectionModel = function() {
         var self = this;
+        self.albumInput = ko.observable('');
+        self.artistInput = ko.observable('');
+        self.releaseDateInput = ko.observable('');
 
         self.cds = ko.observableArray([
             // new CdModel('The Kids are Ready', new Artist('The Faulty'), '2004'),
@@ -30,8 +33,7 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
         ]);
 
         self.addCd = function() {
-            // self.cds.push(new CdModel('', new Artist(''), ''));
-            self.cds.push(new CdModel($('#album').val(), $('#artist').val(), $('#releaseDate').val()));
+            self.cds.push(new CdModel(this.albumInput(), this.artistInput(), this.releaseDateInput()));
             $('#windowTitleDialog').modal('hide');
         };
 
