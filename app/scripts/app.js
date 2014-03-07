@@ -16,6 +16,7 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
         var CdFormViewModel = function(title, cd) {
             var self = this;
             self.cd = cd;
+            self.open = ko.observable(false);
             self.save = ko.observable(true);
             self.update = ko.observable(false);
             self.formTitle = ko.observable(title);
@@ -57,10 +58,12 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
             };
 
             self.show = function() {
+                self.open(true);
                 $('#windowTitleDialog').modal('show');
             };
 
             self.hide = function() {
+                self.open(false);
                 $('#windowTitleDialog').modal('hide');
             };
         };
@@ -74,6 +77,13 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
             new CdViewModel('Means to an End', 'DDF', '2001'),
             new CdViewModel('Mongrel', 'Number 12', '2007')
         ]);
+
+        self.releaseYears = [];
+        var currentYear = new Date().getFullYear();
+
+        for (var i=currentYear; i>1981; i--) {
+            self.releaseYears.push(i);
+        }
 
         self.addCd = function() {
             self.cds.push(new CdViewModel(self.cdForm().albumInput(), self.cdForm().artistInput(), self.cdForm().releaseDateInput()));
