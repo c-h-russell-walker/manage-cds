@@ -1,47 +1,92 @@
 'use strict';
 define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
 
-    console.log(underscore);
+    // console.log(underscore);
 
-    var CdModel = function(album, artist, releaseDate) {
-        var self = this;
-        self.album = ko.observable(album);
-        self.releaseDate = ko.observable(releaseDate);
-        // @todo - make a CD compromised of smaller objects (make artist reusable)
-        self.artist = ko.observable(artist);
-        // self.artist = ko.observable(new Artist(artist));
-    };
+    var CollectionViewModel = function() {
 
-    // var Artist = function(name) {
-    //     var self = this;
-    //     self.name = ko.observable(name);
-    // };
-    
-    var CollectionModel = function() {
+        var CdViewModel = function(album, artist, releaseDate) {
+            var self = this;
+            self.album = ko.observable(album);
+            // @todo - make a CD compromised of smaller objects (make artist reusable)
+            self.artist = ko.observable(artist);
+            self.releaseDate = ko.observable(releaseDate);
+        };
+
+        var CdFormViewModel = function(title, cd) {
+            var self = this;
+            self.cd = cd;
+            self.save = ko.observable(true);
+            self.update = ko.observable(false);
+            self.formTitle = ko.observable(title);
+            self.albumInput = ko.observable(cd.album());
+            self.artistInput = ko.observable(cd.artist());
+            self.releaseDateInput = ko.observable(cd.releaseDate());
+
+            self.updateCd = function(cd) {
+                self.cd = cd;
+                self.save(false);
+                self.update(true);
+                self.show();
+
+                self.albumInput(cd.album());
+                self.artistInput(cd.artist());
+                self.releaseDateInput(cd.releaseDate());
+            };
+
+            self.saveUpdate = function() {
+                self.cd.album(self.albumInput());
+                self.cd.artist(self.artistInput());
+                self.cd.releaseDate(self.releaseDateInput());
+
+                self.resetForm();
+                self.hide();
+            };
+
+            self.resetForm = function() {
+                self.formTitle('Add a CD');
+                self.save(true);
+                self.update(false);
+                self.clearInputs();
+            };
+
+            self.clearInputs = function() {
+                self.albumInput('');
+                self.artistInput('');
+                self.releaseDateInput('');
+            };
+
+            self.show = function() {
+                $('#windowTitleDialog').modal('show');
+            };
+
+            self.hide = function() {
+                $('#windowTitleDialog').modal('hide');
+            };
+        };
+
         var self = this;
-        self.albumInput = ko.observable('');
-        self.artistInput = ko.observable('');
-        self.releaseDateInput = ko.observable('');
+
+        self.cdForm = ko.observable(new CdFormViewModel('Add a CD', new CdViewModel('', '', '')));
 
         self.cds = ko.observableArray([
-            // new CdModel('The Kids are Ready', new Artist('The Faulty'), '2004'),
-            // new CdModel('Means to an End', new Artist('DDF'), '2001'),
-            // new CdModel('Mongrel', new Artist('Number 12'), '2007')
-            new CdModel('The Kids are Ready', 'The Faulty', '2004'),
-            new CdModel('Means to an End', 'DDF', '2001'),
-            new CdModel('Mongrel', 'Number 12', '2007')
+            new CdViewModel('The Kids are Ready', 'The Faulty', '2004'),
+            new CdViewModel('Means to an End', 'DDF', '2001'),
+            new CdViewModel('Mongrel', 'Number 12', '2007')
         ]);
 
         self.addCd = function() {
-            self.cds.push(new CdModel(this.albumInput(), this.artistInput(), this.releaseDateInput()));
-            $('#windowTitleDialog').modal('hide');
+            self.cds.push(new CdViewModel(self.cdForm().albumInput(), self.cdForm().artistInput(), self.cdForm().releaseDateInput()));
+            self.cdForm().hide();
+            self.cdForm().resetForm();
         };
 
         self.removeCd = function(cd) {
             self.cds.remove(cd);
         };
+
     };
 
-    ko.applyBindings(new CollectionModel());
+    ko.applyBindings(new CollectionViewModel());
 
 });

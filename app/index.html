@@ -54,7 +54,7 @@
                     <th>Album</th><th>Artist</th><th>Release Date</th><th></th>
                 </tr></thead>
                 <tbody data-bind="foreach: cds">
-                    <tr>
+                    <tr data-bind="click: function() { $root.cdForm().updateCd($data) }">
                         <td><input data-bind="value: album" /></td>
                         <td><input data-bind="value: artist" /></td>
                         <td><input data-bind="value: releaseDate" /></td>
@@ -67,35 +67,37 @@
                 <p>♥ with help from Yeoman</p>
             </div>
 
-            <a data-toggle="modal" href="#windowTitleDialog" class="btn btn-primary btn-large">Add a CD to your collection</a>
+            <a data-toggle="modal" href="#windowTitleDialog" class="btn btn-primary btn-large" data-bind="click: cdForm().resetForm">Add a CD to your collection</a>
 
         </div>
 
         <div id="windowTitleDialog" class="modal fade">
             <div class="modal-dialog">
-                <form data-bind="submit: addCd">
+                <form>
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title">Add a CD</h4><!-- @todo - make this form work as an edit form as well -->
+                            <h4 class="modal-title" data-bind="text: cdForm().formTitle"></h4>
                         </div>
+                        <!-- @todo Get these inputs to be readonly once clicked so you can't edit in input while modal form is up -->
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="album">Album:</label>
-                                <input type="text" class="form-control" id="album" data-bind="value: albumInput" /></td>
+                                <input type="text" class="form-control" id="album" data-bind="value: cdForm().albumInput" /></td>
                             </div>
                             <div class="form-group">
                                 <label for="artist">Artist:</label>
-                                <input type="text" class="form-control" id="artist" data-bind="value: artistInput" /></td>
+                                <input type="text" class="form-control" id="artist" data-bind="value: cdForm().artistInput" /></td>
                             </div>
                             <div class="form-group">
                                 <label for="releaseDate">Release Date:</label>
-                                <input type="text" class="form-control" id="releaseDate" data-bind="value: releaseDateInput" /><!-- @todo - make this a year dropdown -->
+                                <input type="text" class="form-control" id="releaseDate" data-bind="value: cdForm().releaseDateInput" /><!-- @todo - make this a year dropdown -->
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button data-bind="click: addCd" type="button" class="btn btn-lg">Save CD</button>
+                            <button data-bind="click: addCd, visible: cdForm().save" type="button" id="save-cd" class="btn btn-lg">Save</button>
+                            <button data-bind="click: cdForm().saveUpdate, visible: cdForm().update" type="button" id="update-cd" class="btn btn-lg">Update</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </form>
