@@ -3,7 +3,7 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
 
     // console.log(underscore);
 
-    var CollectionViewModel = function() {
+    var CdCollectionViewModel = function() {
 
         var CdViewModel = function(album, artist, releaseDate) {
             var self = this;
@@ -72,31 +72,54 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
 
         self.cdForm = ko.observable(new CdFormViewModel('Add a CD', new CdViewModel('', '', '')));
 
-        self.cds = ko.observableArray([
-            new CdViewModel('The Kids are Ready', 'The Faulty', '2004'),
-            new CdViewModel('Means to an End', 'DDF', '2001'),
-            new CdViewModel('Mongrel', 'Number 12', '2007')
-        ]);
+        self.cds = ko.observableArray();
+
+        self.preloadCds = function() {
+            if (!localStorage.getItem('CdCollection')) {
+                self.cds.push(new CdViewModel('Means to an End', 'DDF', '2000'));
+                self.cds.push(new CdViewModel('Mongrel', 'Number 12', '2007'));
+                self.cds.push(new CdViewModel('The Kids are Ready', 'The Faulty', '2003'));
+            }
+
+            localStorage.setItem('CdCollection', JSON.stringify(ko.toJSON(self.cds())));
+        };
+
+        var storedCds = JSON.parse(JSON.parse(localStorage.getItem('CdCollection')));
+
+        if (storedCds) {
+            for (var i = 0; i < storedCds.length; i++) {
+                self.cds.push(new CdViewModel(storedCds[i].album, storedCds[i].artist, storedCds[i].releaseDate));
+            }
+        }
+
+        self.artists = ko.observableArray();
 
         self.releaseYears = [];
         var currentYear = new Date().getFullYear();
 
-        for (var i=currentYear; i>1981; i--) {
-            self.releaseYears.push(i);
+        for (var y = currentYear; y > 1981; y--) {
+            self.releaseYears.push(y);
         }
 
         self.addCd = function() {
             self.cds.push(new CdViewModel(self.cdForm().albumInput(), self.cdForm().artistInput(), self.cdForm().releaseDateInput()));
+            localStorage.removeItem('CdCollection');
+            localStorage.setItem('CdCollection', JSON.stringify(ko.toJSON(self.cds())));
             self.cdForm().hide();
             self.cdForm().resetForm();
         };
 
         self.removeCd = function(cd) {
             self.cds.remove(cd);
+            localStorage.removeItem('CdCollection');
+            localStorage.setItem('CdCollection', JSON.stringify(ko.toJSON(self.cds())));
+            if (self.cds().length < 1) {
+                localStorage.removeItem('CdCollection');
+            }
         };
 
     };
 
-    ko.applyBindings(new CollectionViewModel());
+    ko.applyBindings(new CdCollectionViewModel());
 
 });
