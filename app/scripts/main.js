@@ -64,12 +64,12 @@ require.config({
 
 require(['app', 'require', 'jquery', 'knockout', 'underscore', 'bootstrap'], function (app, require, jQuery, ko, underscore, bootstrap) {
     'use strict';
-    console.log(this);
-    // use app here
-    console.log(app);
-    console.log(require);
-    console.log(underscore);
-    console.log('Running Knockout %s', ko.version);
-    console.log('Running jQuery %s', jQuery().jquery);
-    console.log(bootstrap);
+    // console.log(this);
+    // // use app here
+    // console.log(app);
+    // console.log(require);
+    // console.log(underscore);
+    // console.log('Running Knockout %s', ko.version);
+    // console.log('Running jQuery %s', jQuery().jquery);
+    // console.log(bootstrap);
 });
