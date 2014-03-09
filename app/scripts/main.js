@@ -1,6 +1,9 @@
 require.config({
     paths: {
         app: '../scripts/app',
+        cd: '../scripts/cd',
+        form: '../scripts/form',
+        collection: '../scripts/collection',
         require: '../bower_components/requirejs/require',
         jquery: '../bower_components/jquery/jquery',
         knockout: '../bower_components/knockout/build/output/knockout-latest.debug',
@@ -64,12 +67,11 @@ require.config({
 
 require(['app', 'require', 'jquery', 'knockout', 'underscore', 'bootstrap'], function (app, require, jQuery, ko, underscore, bootstrap) {
     'use strict';
-    // console.log(this);
     // // use app here
     // console.log(app);
     // console.log(require);
-    // console.log(underscore);
-    // console.log('Running Knockout %s', ko.version);
     // console.log('Running jQuery %s', jQuery().jquery);
+    // console.log('Running Knockout %s', ko.version);
+    // console.log(underscore);
     // console.log(bootstrap);
 });
