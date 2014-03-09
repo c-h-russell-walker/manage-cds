@@ -30,6 +30,7 @@
 
         <div class="container">
             <div class="header">
+                <a href="#" class="btn btn-primary btn-large  pull-right" data-bind="click: clear, visible: cds().length > 0">Clear your collection</a>
                 <ul class="nav nav-pills pull-right">
                     <!-- @todo - make more pages -->
                     <!-- <li class="active"><a href="#">Home</a></li>
@@ -55,9 +56,9 @@
                 </tr></thead>
                 <tbody data-bind="foreach: cds">
                     <tr>
-                        <td><div data-bind="html: album, click: function() { $root.cdForm.updateCd($data) }"></div></td>
-                        <td><div data-bind="html: artist, click: function() { $root.cdForm.updateCd($data) }"></div></td>
-                        <td><div data-bind="html: releaseDate, click: function() { $root.cdForm.updateCd($data) }"></div></td>
+                        <td><div data-bind="html: album, click: $root.cdForm.updateCd"></div></td>
+                        <td><div data-bind="html: artist, click: $root.cdForm.updateCd"></div></td>
+                        <td><div data-bind="html: releaseDate, click: $root.cdForm.updateCd"></div></td>
                         <td><a href="#" data-bind="click: $root.removeCd">Remove</a></td>
                     </tr>    
                 </tbody>

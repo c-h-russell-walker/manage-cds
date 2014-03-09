@@ -27,8 +27,14 @@ define(['knockout'], function(ko) {
             self.cd.artist(self.artistInput());
             self.cd.releaseDate(self.releaseDateInput());
 
+            self.updateLocalStorage();
+
             self.resetForm();
             self.hide();
+        };
+
+        self.updateLocalStorage = function() {
+            
         };
 
         self.resetForm = function() {
