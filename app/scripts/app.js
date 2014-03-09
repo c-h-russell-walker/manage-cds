@@ -30,6 +30,7 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
                 self.update(true);
                 self.show();
 
+                self.formTitle('Edit this CD');
                 self.albumInput(cd.album());
                 self.artistInput(cd.artist());
                 self.releaseDateInput(cd.releaseDate());
@@ -70,7 +71,7 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
 
         var self = this;
 
-        self.cdForm = ko.observable(new CdFormViewModel('Add a CD', new CdViewModel('', '', '')));
+        self.cdForm = new CdFormViewModel('Add a CD', new CdViewModel('', '', ''));
 
         self.cds = ko.observableArray();
 
@@ -102,11 +103,11 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
         }
 
         self.addCd = function() {
-            self.cds.push(new CdViewModel(self.cdForm().albumInput(), self.cdForm().artistInput(), self.cdForm().releaseDateInput()));
+            self.cds.push(new CdViewModel(self.cdForm.albumInput(), self.cdForm.artistInput(), self.cdForm.releaseDateInput()));
             localStorage.removeItem('CdCollection');
             localStorage.setItem('CdCollection', JSON.stringify(ko.toJSON(self.cds())));
-            self.cdForm().hide();
-            self.cdForm().resetForm();
+            self.cdForm.hide();
+            self.cdForm.resetForm();
         };
 
         self.removeCd = function(cd) {

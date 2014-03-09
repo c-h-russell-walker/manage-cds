@@ -55,12 +55,12 @@
                 </tr></thead>
                 <tbody data-bind="foreach: cds">
                     <tr>
-                        <td><input data-bind="value: album, disable: $root.cdForm().open,
-                                              click: function() { $root.cdForm().updateCd($data) }" /></td>
-                        <td><input data-bind="value: artist, disable: $root.cdForm().open,
-                                              click: function() { $root.cdForm().updateCd($data) }" /></td>
-                        <td><input data-bind="value: releaseDate, disable: $root.cdForm().open,
-                                              click: function() { $root.cdForm().updateCd($data) }" /></td>
+                        <td><input data-bind="value: album, disable: $root.cdForm.open,
+                                              click: function() { $root.cdForm.updateCd($data) }" /></td>
+                        <td><input data-bind="value: artist, disable: $root.cdForm.open,
+                                              click: function() { $root.cdForm.updateCd($data) }" /></td>
+                        <td><input data-bind="value: releaseDate, disable: $root.cdForm.open,
+                                              click: function() { $root.cdForm.updateCd($data) }" /></td>
                         <td><a href="#" data-bind="click: $root.removeCd">Remove</a></td>
                     </tr>    
                 </tbody>
@@ -70,7 +70,7 @@
                 <p>♥ with help from Yeoman</p>
             </div>
 
-            <a data-toggle="modal" href="#windowTitleDialog" class="btn btn-primary btn-large" data-bind="click: cdForm().resetForm">Add a CD to your collection</a>
+            <a data-toggle="modal" href="#windowTitleDialog" class="btn btn-primary btn-large" data-bind="click: cdForm.resetForm">Add a CD to your collection</a>
 
         </div>
 
@@ -80,29 +80,29 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title" data-bind="text: cdForm().formTitle"></h4>
+                            <h4 class="modal-title" data-bind="text: cdForm.formTitle"></h4>
                         </div>
                         <!-- @todo Get these inputs to be readonly once clicked so you can't edit in input while modal form is up -->
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="album">Album:</label>
-                                <input type="text" class="form-control" id="album" data-bind="value: cdForm().albumInput" /></td>
+                                <input type="text" class="form-control" id="album" data-bind="value: cdForm.albumInput" /></td>
                             </div>
                             <div class="form-group">
                                 <label for="artist">Artist:</label>
-                                <input type="text" class="form-control" id="artist" data-bind="value: cdForm().artistInput" /></td>
+                                <input type="text" class="form-control" id="artist" data-bind="value: cdForm.artistInput" /></td>
                             </div>
                             <div class="form-group">
                                 <label for="releaseDate">Release Date:</label>
                                 <select class="form-control" id="releaseDate" data-bind="options: releaseYears,
-                                                                                         value: cdForm().releaseDateInput,
+                                                                                         value: cdForm.releaseDateInput,
                                                                                          optionsCaption: 'Choose a year'"></select>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button data-bind="click: addCd, visible: cdForm().save" type="button" id="save-cd" class="btn btn-lg">Save</button>
-                            <button data-bind="click: cdForm().saveUpdate, visible: cdForm().update" type="button" id="update-cd" class="btn btn-lg">Update</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: cdForm.hide">Close</button>
+                            <button data-bind="click: addCd, visible: cdForm.save" type="button" id="save-cd" class="btn btn-lg">Save</button>
+                            <button data-bind="click: cdForm.saveUpdate, visible: cdForm.update" type="button" id="update-cd" class="btn btn-lg">Update</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </form>
