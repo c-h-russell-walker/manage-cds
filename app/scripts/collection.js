@@ -1,6 +1,6 @@
 'use strict';
 define(['knockout', 'cd', 'form'], function(ko, CdViewModel, CdFormViewModel) {
-    return function() {
+    return function CdCollectionViewModel() {
         var self = this;
 
         self.cdForm = new CdFormViewModel('Add a CD', new CdViewModel('', '', ''));

@@ -1,6 +1,6 @@
 'use strict';
 define(['knockout'], function(ko) {
-    return function(title, cd) {
+    return function CdFormViewModel(title, cd) {
         var self = this;
         self.cd = cd;
         self.save = ko.observable(true);
