@@ -55,12 +55,9 @@
                 </tr></thead>
                 <tbody data-bind="foreach: cds">
                     <tr>
-                        <td><input data-bind="value: album, disable: $root.cdForm.open,
-                                              click: function() { $root.cdForm.updateCd($data) }" /></td>
-                        <td><input data-bind="value: artist, disable: $root.cdForm.open,
-                                              click: function() { $root.cdForm.updateCd($data) }" /></td>
-                        <td><input data-bind="value: releaseDate, disable: $root.cdForm.open,
-                                              click: function() { $root.cdForm.updateCd($data) }" /></td>
+                        <td><div data-bind="html: album, click: function() { $root.cdForm.updateCd($data) }"></div></td>
+                        <td><div data-bind="html: artist, click: function() { $root.cdForm.updateCd($data) }"></div></td>
+                        <td><div data-bind="html: releaseDate, click: function() { $root.cdForm.updateCd($data) }"></div></td>
                         <td><a href="#" data-bind="click: $root.removeCd">Remove</a></td>
                     </tr>    
                 </tbody>
