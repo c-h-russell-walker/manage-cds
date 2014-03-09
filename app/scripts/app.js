@@ -16,7 +16,6 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
         var CdFormViewModel = function(title, cd) {
             var self = this;
             self.cd = cd;
-            self.open = ko.observable(false);
             self.save = ko.observable(true);
             self.update = ko.observable(false);
             self.formTitle = ko.observable(title);
@@ -59,12 +58,10 @@ define(['jquery', 'knockout', 'underscore'], function(jQuery, ko, underscore) {
             };
 
             self.show = function() {
-                self.open(true);
                 $('#windowTitleDialog').modal('show');
             };
 
             self.hide = function() {
-                self.open(false);
                 $('#windowTitleDialog').modal('hide');
             };
         };
