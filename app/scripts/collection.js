@@ -21,7 +21,7 @@ define(['knockout', 'cd', 'form'], function(ko, CdViewModel, CdFormViewModel) {
 
         if (storedCds) {
             for (var i = 0; i < storedCds.length; i++) {
-                self.cds.push(new CdViewModel(storedCds[i].album, storedCds[i].artist, storedCds[i].releaseDate));
+                self.cds.push(new CdViewModel(storedCds[i].album, storedCds[i].artist.name, storedCds[i].releaseDate));
             }
         }
 

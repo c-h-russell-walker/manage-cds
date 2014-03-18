@@ -2,6 +2,7 @@ require.config({
     paths: {
         app: '../scripts/app',
         cd: '../scripts/cd',
+        artist: '../scripts/artist',
         form: '../scripts/form',
         collection: '../scripts/collection',
         require: '../bower_components/requirejs/require',

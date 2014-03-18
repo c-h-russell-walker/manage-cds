@@ -1,10 +1,9 @@
 'use strict';
-define(['knockout'], function(ko) {
+define(['knockout', 'artist'], function(ko, ArtistViewModel) {
     return function CdViewModel(album, artist, releaseDate) {
         var self = this;
         self.album = ko.observable(album);
-        // @todo - make a CD compromised of smaller objects (make artist reusable)
-        self.artist = ko.observable(artist);
+        self.artist = new ArtistViewModel(artist);
         self.releaseDate = ko.observable(releaseDate);
     };
 });

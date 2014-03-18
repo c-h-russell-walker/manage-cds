@@ -7,7 +7,7 @@ define(['knockout'], function(ko) {
         self.update = ko.observable(false);
         self.formTitle = ko.observable(title);
         self.albumInput = ko.observable(cd.album());
-        self.artistInput = ko.observable(cd.artist());
+        self.artistInput = ko.observable(cd.artist.name());
         self.releaseDateInput = ko.observable(cd.releaseDate());
 
         self.updateCd = function(cd) {
@@ -18,14 +18,14 @@ define(['knockout'], function(ko) {
 
             self.formTitle('Edit this CD');
             self.albumInput(cd.album());
-            self.artistInput(cd.artist());
+            self.artistInput(cd.artist.name());
             self.releaseDateInput(cd.releaseDate());
         };
 
         self.saveUpdate = function() {
             var oldAlbumName = self.cd.album();
             self.cd.album(self.albumInput());
-            self.cd.artist(self.artistInput());
+            self.cd.artist.name(self.artistInput());
             self.cd.releaseDate(self.releaseDateInput());
 
             self.updateLocalStorage(oldAlbumName);
