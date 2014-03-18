@@ -47,7 +47,7 @@
             </div>
 
             <div class="row">
-                CD Collection (<span data-bind="text: cds().length"></span>)
+                CD Collection <span data-bind="text: '('+cds().length+')', visible: cds().length > 0"></span>
             </div>
 
             <table class="table">

@@ -23,18 +23,29 @@ define(['knockout'], function(ko) {
         };
 
         self.saveUpdate = function() {
+            var oldAlbumName = self.cd.album();
             self.cd.album(self.albumInput());
             self.cd.artist(self.artistInput());
             self.cd.releaseDate(self.releaseDateInput());
 
-            self.updateLocalStorage();
+            self.updateLocalStorage(oldAlbumName);
 
             self.resetForm();
             self.hide();
         };
 
-        self.updateLocalStorage = function() {
-            
+        self.updateLocalStorage = function(oldAlbumName) {
+            var storedCds = JSON.parse(localStorage.getItem('CdCollection'));
+            for(var c=0; c < storedCds.length; c++) {
+                if (storedCds[c].album === oldAlbumName) {
+                    storedCds[c].album = self.cd.album();
+                    storedCds[c].artist = self.cd.artist;
+                    storedCds[c].releaseDate = self.cd.releaseDate();
+                }
+            }
+
+            localStorage.removeItem('CdCollection');
+            localStorage.setItem('CdCollection', ko.toJSON(storedCds));
         };
 
         self.resetForm = function() {
