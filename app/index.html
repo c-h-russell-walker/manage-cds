@@ -56,9 +56,9 @@
                 </tr></thead>
                 <tbody data-bind="foreach: cds">
                     <tr>
-                        <td><div data-bind="html: album, click: $root.cdForm.updateCd"></div></td>
-                        <td><div data-bind="html: artist.name, click: $root.cdForm.updateCd"></div></td>
-                        <td><div data-bind="html: releaseDate, click: $root.cdForm.updateCd"></div></td>
+                        <td><div class="album" data-bind="html: album, click: $root.cdForm.updateCd"></div></td>
+                        <td><div class="artist" data-bind="html: artist.name, click: $root.cdForm.updateCd"></div></td>
+                        <td><div class="releaseDate" data-bind="html: releaseDate, click: $root.cdForm.updateCd"></div></td>
                         <td><a href="#" data-bind="click: $root.removeCd">Remove</a></td>
                     </tr>    
                 </tbody>

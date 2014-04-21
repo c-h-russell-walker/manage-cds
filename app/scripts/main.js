@@ -3,7 +3,7 @@ require.config({
         app: '../scripts/app',
         cd: '../scripts/cd',
         artist: '../scripts/artist',
-        form: '../scripts/form',
+        cdForm: '../scripts/cd-form',
         collection: '../scripts/collection',
         require: '../bower_components/requirejs/require',
         jquery: '../bower_components/jquery/jquery',

@@ -10,11 +10,18 @@ define(['knockout'], function(ko) {
         self.artistInput = ko.observable(cd.artist.name());
         self.releaseDateInput = ko.observable(cd.releaseDate());
 
-        self.updateCd = function(cd) {
+        self.updateCd = function(cd, event) {
             self.cd = cd;
             self.save(false);
             self.update(true);
-            self.show();
+
+            // Used to focus clicked element
+            if (event.srcElement) { // MouseEvent
+                var form_id = event.srcElement.className;
+            } else { // jQuery.Event
+                var form_id = event.currentTarget.className;
+            }
+            self.show(form_id);
 
             self.formTitle('Edit this CD');
             self.albumInput(cd.album());
@@ -61,8 +68,10 @@ define(['knockout'], function(ko) {
             self.releaseDateInput('');
         };
 
-        self.show = function() {
-            $('#windowTitleDialog').modal('show');
+        self.show = function(form_id) {
+            $('#windowTitleDialog').modal('show').on('shown.bs.modal', function () {
+                $('.modal-body #'+form_id).focus();
+            });
         };
 
         self.hide = function() {

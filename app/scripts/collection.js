@@ -1,5 +1,5 @@
 'use strict';
-define(['knockout', 'cd', 'form'], function(ko, CdViewModel, CdFormViewModel) {
+define(['knockout', 'cd', 'cd-form'], function(ko, CdViewModel, CdFormViewModel) {
     return function CdCollectionViewModel() {
         var self = this;
 
