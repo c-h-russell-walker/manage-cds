@@ -7,7 +7,7 @@ define(['knockout'], function(ko) {
         self.update = ko.observable(false);
         self.formTitle = ko.observable(title);
         self.albumInput = ko.observable(cd.album());
-        self.artistInput = ko.observable(cd.artist.name());
+        self.artistInput = ko.observable(cd.artist);
         self.releaseDateInput = ko.observable(cd.releaseDate());
 
         self.updateCd = function(cd, event) {
@@ -25,15 +25,30 @@ define(['knockout'], function(ko) {
 
             self.formTitle('Edit this CD');
             self.albumInput(cd.album());
-            self.artistInput(cd.artist.name());
+            self.artistInput(cd.artist);
             self.releaseDateInput(cd.releaseDate());
         };
 
         self.saveUpdate = function() {
             var oldAlbumName = self.cd.album();
             self.cd.album(self.albumInput());
-            self.cd.artist.name(self.artistInput());
+            
+            console.log(self.cd);
+            console.log(self.cd.artist);
+            
+            // TODO: get actual object reference from artists object in controller
+                // Should this be a map? so we can get it by name or something?
+            var storedArtists = JSON.parse(localStorage.getItem('ArtistCollection'));
+            for(var a=0; a < storedArtists.length; a++) {
+                if (storedArtists[a].name === self.artistInput()) {
+                    var artistRef = storedArtists[a];
+                }
+            }
+            self.cd.artist = artistRef;
             self.cd.releaseDate(self.releaseDateInput());
+
+            console.log(self.cd);
+            console.log(artistRef);
 
             self.updateLocalStorage(oldAlbumName);
 
@@ -64,18 +79,17 @@ define(['knockout'], function(ko) {
 
         self.clearInputs = function() {
             self.albumInput('');
-            self.artistInput('');
             self.releaseDateInput('');
         };
 
         self.show = function(form_id) {
-            $('#windowTitleDialog').modal('show').on('shown.bs.modal', function () {
+            $('#cdFormDialog').modal('show').on('shown.bs.modal', function () {
                 $('.modal-body #'+form_id).focus();
             });
         };
 
         self.hide = function() {
-            $('#windowTitleDialog').modal('hide');
+            $('#cdFormDialog').modal('hide');
         };
     };
 });

@@ -1,9 +1,13 @@
 'use strict';
-define(['knockout', 'cd', 'cd-form', 'artist'], function(ko, CdViewModel, CdFormViewModel, ArtistViewModel) {
+define(['knockout', 'cd', 'cd-form', 'artist-form', 'artist'], function(ko, CdViewModel, CdFormViewModel, ArtistFormViewModel, ArtistViewModel) {
     return function CdCollectionViewModel() {
         var self = this;
 
-        self.cdForm = new CdFormViewModel('Add a CD', new CdViewModel('', '', ''));
+        self.cdManager = ko.observable(true);
+        self.artistManager = ko.observable(false);
+
+        self.cdForm = new CdFormViewModel('Add a CD', new CdViewModel('', {}, ''));
+        self.artistForm = new ArtistFormViewModel('Add a new artist', new ArtistViewModel('', '', ''));
 
         self.cds = ko.observableArray();
         self.artists = ko.observableArray();
@@ -15,16 +19,19 @@ define(['knockout', 'cd', 'cd-form', 'artist'], function(ko, CdViewModel, CdForm
         }
 
         self.preloadCds = function() {
-            if (!localStorage.getItem('CdCollection')) {
-                self.cds.push(new CdViewModel('Means to an End', 'DDF', '2000'));
-                self.cds.push(new CdViewModel('Mongrel', 'Number 12', '2007'));
-                self.cds.push(new CdViewModel('The Kids are Ready', 'The Faulty', '2003'));
+            if(!localStorage.getItem('ArtistCollection')) {
+                var tempDdf = new ArtistViewModel('DDF'),
+                    tempNumber12 = new ArtistViewModel('Number 12'),
+                    tempTheFaulty = new ArtistViewModel('The Faulty');
+                self.artists.push(tempDdf);
+                self.artists.push(tempNumber12);
+                self.artists.push(tempTheFaulty);
             }
 
-            if(!localStorage.getItem('ArtistCollection')) {
-                self.artists.push(new ArtistViewModel('DDF'));
-                self.artists.push(new ArtistViewModel('Number 12'));
-                self.artists.push(new ArtistViewModel('The Faulty'));
+            if (!localStorage.getItem('CdCollection')) {
+                self.cds.push(new CdViewModel('Means to an End', tempDdf, '2000'));
+                self.cds.push(new CdViewModel('Mongrel', tempNumber12, '2007'));
+                self.cds.push(new CdViewModel('The Kids are Ready', tempTheFaulty, '2003'));
             }
 
             localStorage.setItem('ArtistCollection', ko.toJSON(self.artists()));
@@ -32,11 +39,18 @@ define(['knockout', 'cd', 'cd-form', 'artist'], function(ko, CdViewModel, CdForm
             localStorage.setItem('CdCollection', ko.toJSON(self.cds()));
         };
 
-        var storedCds = JSON.parse(localStorage.getItem('CdCollection'));
+        var storedCds = JSON.parse(localStorage.getItem('CdCollection')),
+            storedArtists = JSON.parse(localStorage.getItem('ArtistCollection'));
+
+        if (storedArtists) {
+            for (var j = 0; j < storedArtists.length; j++) {
+                self.artists.push(new ArtistViewModel(storedArtists[j].name));
+            }
+        }
 
         if (storedCds) {
             for (var i = 0; i < storedCds.length; i++) {
-                self.cds.push(new CdViewModel(storedCds[i].album, storedCds[i].artist.name, storedCds[i].releaseDate));
+                self.cds.push(new CdViewModel(storedCds[i].album, storedArtists[i], storedCds[i].releaseDate));
             }
         }
 
@@ -46,6 +60,14 @@ define(['knockout', 'cd', 'cd-form', 'artist'], function(ko, CdViewModel, CdForm
             localStorage.setItem('CdCollection', ko.toJSON(self.cds()));
             self.cdForm.hide();
             self.cdForm.resetForm();
+        };
+
+        self.addArtist = function() {
+            self.artists.push(new ArtistViewModel(self.artistForm.nameInput()));
+            self.clearStorage();
+            localStorage.setItem('ArtistCollection', ko.toJSON(self.artists()));
+            self.artistForm.hide();
+            self.artistForm.resetForm();
         };
 
         self.removeCd = function(cd) {
@@ -65,6 +87,16 @@ define(['knockout', 'cd', 'cd-form', 'artist'], function(ko, CdViewModel, CdForm
         self.clear = function() {
             self.clearStorage();
             self.cds([]);
+        };
+
+        self.manageCds = function() {
+            self.cdManager(true);
+            self.artistManager(false);
+        };
+
+        self.manageArtists = function() {
+            self.cdManager(false);
+            self.artistManager(true);
         };
     };
 });
