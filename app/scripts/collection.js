@@ -42,13 +42,10 @@ define(['knockout', 'cd', 'cd-form', 'artist-form', 'artist'], function(ko, CdVi
         var storedCds = JSON.parse(localStorage.getItem('CdCollection')),
             storedArtists = JSON.parse(localStorage.getItem('ArtistCollection'));
 
-        if (storedArtists) {
+        if (storedArtists && storedCds) {
             for (var j = 0; j < storedArtists.length; j++) {
                 self.artists.push(new ArtistViewModel(storedArtists[j].name));
             }
-        }
-
-        if (storedCds) {
             for (var i = 0; i < storedCds.length; i++) {
                 self.cds.push(new CdViewModel(storedCds[i].album, storedArtists[i], storedCds[i].releaseDate));
             }
