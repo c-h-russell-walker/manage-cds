@@ -55,6 +55,7 @@ define(['knockout', 'cd', 'cd-form', 'artist-form', 'artist'], function(ko, CdVi
             self.cds.push(new CdViewModel(self.cdForm.albumInput(), self.cdForm.artistInput(), self.cdForm.releaseDateInput()));
             self.clearStorage();
             localStorage.setItem('CdCollection', ko.toJSON(self.cds()));
+            localStorage.setItem('ArtistCollection', ko.toJSON(self.artists()));
             self.cdForm.hide();
             self.cdForm.resetForm();
         };
@@ -63,6 +64,7 @@ define(['knockout', 'cd', 'cd-form', 'artist-form', 'artist'], function(ko, CdVi
             self.artists.push(new ArtistViewModel(self.artistForm.nameInput()));
             self.clearStorage();
             localStorage.setItem('ArtistCollection', ko.toJSON(self.artists()));
+            localStorage.setItem('CdCollection', ko.toJSON(self.cds()));
             self.artistForm.hide();
             self.artistForm.resetForm();
         };
@@ -84,6 +86,7 @@ define(['knockout', 'cd', 'cd-form', 'artist-form', 'artist'], function(ko, CdVi
         self.clear = function() {
             self.clearStorage();
             self.cds([]);
+            self.artists([]);
         };
 
         self.manageCds = function() {

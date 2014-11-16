@@ -7,7 +7,7 @@ define(['knockout'], function(ko) {
         self.update = ko.observable(false);
         self.formTitle = ko.observable(title);
         self.albumInput = ko.observable(cd.album());
-        self.artistInput = ko.observable(cd.artist);
+        self.artistInput = ko.observable(cd.artist().name);
         self.releaseDateInput = ko.observable(cd.releaseDate());
 
         self.updateCd = function(cd, event) {
@@ -25,16 +25,13 @@ define(['knockout'], function(ko) {
 
             self.formTitle('Edit this CD');
             self.albumInput(cd.album());
-            self.artistInput(cd.artist);
+            self.artistInput(cd.artist().name);
             self.releaseDateInput(cd.releaseDate());
         };
 
         self.saveUpdate = function() {
             var oldAlbumName = self.cd.album();
             self.cd.album(self.albumInput());
-            
-            console.log(self.cd);
-            console.log(self.cd.artist);
             
             // TODO: get actual object reference from artists object in controller
                 // Should this be a map? so we can get it by name or something?
@@ -44,12 +41,8 @@ define(['knockout'], function(ko) {
                     var artistRef = storedArtists[a];
                 }
             }
-            self.cd.artist = artistRef;
+            self.cd.artist(artistRef);
             self.cd.releaseDate(self.releaseDateInput());
-
-            console.log(self.cd);
-            console.log(artistRef);
-
             self.updateLocalStorage(oldAlbumName);
 
             self.resetForm();

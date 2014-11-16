@@ -56,7 +56,7 @@
                     <tbody data-bind="foreach: cds">
                         <tr>
                             <td><div class="album" data-bind="html: album, click: $root.cdForm.updateCd"></div></td>
-                            <td><div class="artist" data-bind="html: artist.name, click: $root.cdForm.updateCd"></div></td>
+                            <td><div class="artist" data-bind="html: artist().name, click: $root.cdForm.updateCd"></div></td>
                             <td><div class="releaseDate" data-bind="html: releaseDate, click: $root.cdForm.updateCd"></div></td>
                             <td><a href="#" data-bind="click: $root.removeCd">Remove</a></td>
                         </tr>    
@@ -108,8 +108,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: artistForm.hide">Close</button>
-                            <button data-bind="click: addArtist, visible: artistForm.save" type="button" id="save-artist" class="btn btn-lg">Save</button>
-                            <button data-bind="click: artistForm.saveUpdate, visible: artistForm.update" type="button" id="update-artist" class="btn btn-lg">Update</button>
+                            <button data-bind="click: addArtist, visible: artistForm.save, enable: artistForm.nameInput" type="button" id="save-artist" class="btn btn-lg">Save</button>
+                            <button data-bind="click: artistForm.saveUpdate, visible: artistForm.update, enable: artistForm.nameInput" type="button" id="update-artist" class="btn btn-lg">Update</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </form>
@@ -146,8 +146,9 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: cdForm.hide">Close</button>
-                            <button data-bind="click: addCd, visible: cdForm.save" type="button" id="save-cd" class="btn btn-lg">Save</button>
-                            <button data-bind="click: cdForm.saveUpdate, visible: cdForm.update" type="button" id="update-cd" class="btn btn-lg">Update</button>
+                            <!-- Let's allow a user to add a CD even if they don't know the release date or the artist -->
+                            <button data-bind="addCd, visible: cdForm.save, enable: cdForm.albumInput" type="button" id="save-cd" class="btn btn-lg">Save</button>
+                            <button data-bind="click: cdForm.saveUpdate, visible: cdForm.update, enable: cdForm.artistInput" type="button" id="update-cd" class="btn btn-lg">Update</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </form>
