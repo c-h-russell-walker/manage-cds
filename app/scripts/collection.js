@@ -19,10 +19,13 @@ define(['knockout', 'cd', 'cd-form', 'artist-form', 'artist'], function(ko, CdVi
         }
 
         self.preloadCds = function() {
+            var tempDdf,
+                tempNumber12,
+                tempTheFaulty;
             if(!localStorage.getItem('ArtistCollection')) {
-                var tempDdf = new ArtistViewModel('DDF'),
-                    tempNumber12 = new ArtistViewModel('Number 12'),
-                    tempTheFaulty = new ArtistViewModel('The Faulty');
+                tempDdf = new ArtistViewModel('DDF');
+                tempNumber12 = new ArtistViewModel('Number 12');
+                tempTheFaulty = new ArtistViewModel('The Faulty');
                 self.artists.push(tempDdf);
                 self.artists.push(tempNumber12);
                 self.artists.push(tempTheFaulty);

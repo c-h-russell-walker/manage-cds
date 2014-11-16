@@ -65,7 +65,7 @@ require.config({
         }
     }
 });
-
+/*jshint unused: false */
 require(['app', 'require', 'jquery', 'knockout', 'underscore', 'bootstrap'], function (app, require, jQuery, ko, underscore, bootstrap) {
     'use strict';
     // // use app here
