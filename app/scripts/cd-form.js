@@ -21,7 +21,9 @@ define(['knockout'], function(ko) {
 
             self.formTitle('Edit this CD');
             self.albumInput(cd.album());
-            self.artistInput(cd.artist().name);
+            if (cd.artist()) {
+                self.artistInput(cd.artist().name);
+            }
             self.releaseDateInput(cd.releaseDate());
         };
 
