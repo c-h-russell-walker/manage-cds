@@ -16,12 +16,13 @@ define(['knockout'], function(ko) {
             self.update(true);
 
             // Used to focus clicked element
+            var formId = null;
             if (event.srcElement) { // MouseEvent
-                var form_id = event.srcElement.className;
+                formId = event.srcElement.className;
             } else { // jQuery.Event
-                var form_id = event.currentTarget.className;
+                formId = event.currentTarget.className;
             }
-            self.show(form_id);
+            self.show(formId);
 
             self.formTitle('Edit this CD');
             self.albumInput(cd.album());
@@ -35,10 +36,11 @@ define(['knockout'], function(ko) {
             
             // TODO: get actual object reference from artists object in controller
                 // Should this be a map? so we can get it by name or something?
-            var storedArtists = JSON.parse(localStorage.getItem('ArtistCollection'));
+            var storedArtists = JSON.parse(localStorage.getItem('ArtistCollection')),
+                artistRef = {};
             for(var a=0; a < storedArtists.length; a++) {
                 if (storedArtists[a].name === self.artistInput()) {
-                    var artistRef = storedArtists[a];
+                    artistRef = storedArtists[a];
                 }
             }
             self.cd.artist(artistRef);
@@ -75,9 +77,9 @@ define(['knockout'], function(ko) {
             self.releaseDateInput('');
         };
 
-        self.show = function(form_id) {
+        self.show = function(formId) {
             $('#cdFormDialog').modal('show').on('shown.bs.modal', function () {
-                $('.modal-body #'+form_id).focus();
+                $('.modal-body #'+formId).focus();
             });
         };
 

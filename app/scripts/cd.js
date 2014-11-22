@@ -1,5 +1,5 @@
 'use strict';
-define(['knockout', 'artist'], function(ko, ArtistViewModel) {
+define(['knockout'], function(ko) {
     return function CdViewModel(album, artist, releaseDate) {
         var self = this;
         self.album = ko.observable(album);

@@ -8,7 +8,7 @@ define(['knockout'], function(ko) {
         self.formTitle = ko.observable(title);
         self.nameInput = ko.observable(artist.name());
 
-        self.updateArtist = function(artist, event) {
+        self.updateArtist = function(artist) {
             self.artist = artist;
             self.save(false);
             self.update(true);
