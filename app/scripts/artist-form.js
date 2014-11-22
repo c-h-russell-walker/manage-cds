@@ -36,7 +36,6 @@ define(['knockout'], function(ko) {
                 }
             }
 
-            localStorage.removeItem('ArtistCollection');
             localStorage.setItem('ArtistCollection', ko.toJSON(storedArtists));
         };
 

@@ -56,7 +56,6 @@ define(['knockout'], function(ko) {
                 }
             }
 
-            localStorage.removeItem('CdCollection');
             localStorage.setItem('CdCollection', ko.toJSON(storedCds));
         };
 
