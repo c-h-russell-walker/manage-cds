@@ -1,10 +1,6 @@
 require.config({
     paths: {
         app: '../scripts/app',
-        cd: '../scripts/cd',
-        artist: '../scripts/artist',
-        cdForm: '../scripts/cd-form',
-        collection: '../scripts/collection',
         require: '../bower_components/requirejs/require',
         jquery: '../bower_components/jquery/jquery',
         knockout: '../bower_components/knockout/build/output/knockout-latest.debug',
