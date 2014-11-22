@@ -12,11 +12,14 @@ define(['knockout', './cd', './artist', './cd-form', './artist-form'], function(
         self.cds = ko.observableArray();
         self.artists = ko.observableArray();
         self.releaseYears = [];
-        var currentYear = new Date().getFullYear();
 
-        for (var y = currentYear; y > 1981; y--) {
-            self.releaseYears.push(y);
-        }
+        self.loadReleaseYears = function() {
+            var currentYear = new Date().getFullYear();
+
+            for (var y = currentYear; y > 1981; y--) {
+                self.releaseYears.push(y);
+            }
+        };
 
         self.preloadCds = function() {
             var tempDdf,
@@ -101,5 +104,10 @@ define(['knockout', './cd', './artist', './cd-form', './artist-form'], function(
             self.cdManager(false);
             self.artistManager(true);
         };
+
+        // IIFE - use for initialization
+        (function initializeCdPage() {
+            self.loadReleaseYears();
+        })();
     };
 });
