@@ -13,6 +13,10 @@ define(['knockout', './cd', './artist', './cd-form', './artist-form'], function(
         self.artists = ko.observableArray();
         self.releaseYears = [];
 
+        self.cdAmount = ko.computed(function() {
+            return self.cds().length > 0 ? '(' + self.cds().length + ')' : '';
+        }, self);
+
         self.loadReleaseYears = function() {
             var currentYear = new Date().getFullYear();
 
