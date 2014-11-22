@@ -1,6 +1,6 @@
 'use strict';
 define(['knockout', 'cd', 'cd-form', 'artist-form', 'artist'], function(ko, CdViewModel, CdFormViewModel, ArtistFormViewModel, ArtistViewModel) {
-    return function CdCollectionViewModel() {
+    return function CdPageViewModel() {
         var self = this;
 
         self.cdManager = ko.observable(true);

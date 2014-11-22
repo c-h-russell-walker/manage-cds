@@ -1,6 +1,6 @@
 'use strict';
-define(['knockout', 'collection'], function(ko, CdCollectionViewModel) {
+define(['knockout', 'page'], function(ko, CdPageViewModel) {
 
-    ko.applyBindings(new CdCollectionViewModel());
+    ko.applyBindings(new CdPageViewModel());
 
 });
