@@ -15,13 +15,8 @@ define(['knockout'], function(ko) {
             self.save(false);
             self.update(true);
 
-            // Used to focus clicked element
-            var formId = null;
-            if (event.srcElement) { // MouseEvent
-                formId = event.srcElement.className;
-            } else { // jQuery.Event
-                formId = event.currentTarget.className;
-            }
+            // Used to focus clicked element - Ternary sets classname from jQuery event if it's not a MouseEvent
+            var formId = event.srcElement ? event.srcElement.className : event.currentTarget.className;
             self.show(formId);
 
             self.formTitle('Edit this CD');
@@ -37,7 +32,7 @@ define(['knockout'], function(ko) {
             // TODO: get actual object reference from artists object in controller
                 // Should this be a map? so we can get it by name or something?
             var storedArtists = JSON.parse(localStorage.getItem('ArtistCollection')),
-                artistRef = {};
+                artistRef;
             for(var a=0; a < storedArtists.length; a++) {
                 if (storedArtists[a].name === self.artistInput()) {
                     artistRef = storedArtists[a];
