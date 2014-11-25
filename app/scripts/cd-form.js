@@ -1,6 +1,6 @@
 'use strict';
 define(['knockout'], function(ko) {
-    return function CdFormViewModel(title, cd) {
+    return function CdFormViewModel(title, cd, emitter) {
         var self = this;
         self.cd = cd;
         self.save = ko.observable(true);
@@ -44,7 +44,10 @@ define(['knockout'], function(ko) {
             }
             self.cd.artist(artistRef);
             self.cd.releaseDate(self.releaseDateInput());
+            
             self.updateLocalStorage(oldAlbumName);
+            // TODO - write this and remove any CRUD from form module
+            emitter.emit('saveCd', self);
 
             self.resetForm();
             self.hide();

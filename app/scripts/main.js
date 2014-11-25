@@ -2,6 +2,7 @@ require.config({
     paths: {
         app: '../scripts/app',
         require: '../bower_components/requirejs/require',
+        tinyEmitter: '../bower_components/tiny-emitter/dist/tinyemitter',
         jquery: '../bower_components/jquery/jquery',
         knockout: '../bower_components/knockout/build/output/knockout-latest.debug',
         underscore: '../bower_components/underscore/underscore',

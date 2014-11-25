@@ -1,15 +1,25 @@
 'use strict';
-define(['knockout', './data-service', './cd', './artist', './cd-form', './artist-form'],
-        function(ko, DataService, CdViewModel, ArtistViewModel, CdFormViewModel, ArtistFormViewModel) {
+define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-form', './artist-form'],
+        function(ko, Emitter, DataService, CdViewModel, ArtistViewModel, CdFormViewModel, ArtistFormViewModel) {
     return function CdPageViewModel() {
         var self = this,
-            dataServiceLayer = new DataService(self);
+            dataServiceLayer = new DataService(self),
+            emitter = new Emitter();
 
         self.cdManager = ko.observable(true);
         self.artistManager = ko.observable(false);
 
-        self.cdForm = new CdFormViewModel('Add a CD', new CdViewModel('', {}, ''));
-        self.artistForm = new ArtistFormViewModel('Add a new artist', new ArtistViewModel('', '', ''));
+        self.cdForm = new CdFormViewModel('Add a CD', new CdViewModel('', {}, ''), emitter);
+        self.artistForm = new ArtistFormViewModel('Add a new artist', new ArtistViewModel('', '', ''), emitter);
+
+        // Our pub/subs
+        emitter.on('saveCd', function processCdSave(formData) {
+            console.log('saveCd - Using Emitter: ', formData);
+        });
+
+        emitter.on('saveArtist', function processArtistSave(formData) {
+            console.log('saveArtist - Using Emitter: ', formData);
+        });
 
         self.cds = ko.observableArray();
         self.artists = ko.observableArray();
