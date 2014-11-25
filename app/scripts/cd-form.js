@@ -23,6 +23,8 @@ define(['knockout'], function(ko) {
             self.albumInput(cd.album());
             if (cd.artist()) {
                 self.artistInput(cd.artist().name);
+            } else {
+                self.artistInput('');
             }
             self.releaseDateInput(cd.releaseDate());
         };
@@ -70,6 +72,7 @@ define(['knockout'], function(ko) {
 
         self.clearInputs = function() {
             self.albumInput('');
+            self.artistInput('');
             self.releaseDateInput('');
         };
 
