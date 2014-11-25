@@ -1,7 +1,9 @@
 'use strict';
-define(['knockout', './cd', './artist', './cd-form', './artist-form'], function(ko, CdViewModel, ArtistViewModel, CdFormViewModel, ArtistFormViewModel) {
+define(['knockout', './data-service', './cd', './artist', './cd-form', './artist-form'],
+        function(ko, DataService, CdViewModel, ArtistViewModel, CdFormViewModel, ArtistFormViewModel) {
     return function CdPageViewModel() {
-        var self = this;
+        var self = this,
+            dataServiceLayer = new DataService(self);
 
         self.cdManager = ko.observable(true);
         self.artistManager = ko.observable(false);
@@ -26,36 +28,21 @@ define(['knockout', './cd', './artist', './cd-form', './artist-form'], function(
         };
 
         self.preloadCds = function() {
-            var tempDdf,
-                tempNumber12,
-                tempTheFaulty;
-            if(!localStorage.getItem('ArtistCollection')) {
-                tempDdf = new ArtistViewModel('DDF');
-                tempNumber12 = new ArtistViewModel('Number 12');
-                tempTheFaulty = new ArtistViewModel('The Faulty');
-                self.artists.push(tempDdf);
-                self.artists.push(tempNumber12);
-                self.artists.push(tempTheFaulty);
-            }
-
-            if (!localStorage.getItem('CdCollection')) {
-                self.cds.push(new CdViewModel('Means to an End', tempDdf, '2000'));
-                self.cds.push(new CdViewModel('Mongrel', tempNumber12, '2007'));
-                self.cds.push(new CdViewModel('The Kids are Ready', tempTheFaulty, '2003'));
-            }
-
-            localStorage.setItem('ArtistCollection', ko.toJSON(self.artists()));
-
-            localStorage.setItem('CdCollection', ko.toJSON(self.cds()));
+            dataServiceLayer.preloadCds();
         };
 
-        var storedCds = JSON.parse(localStorage.getItem('CdCollection')),
-            storedArtists = JSON.parse(localStorage.getItem('ArtistCollection'));
+        var storedCds = dataServiceLayer.getStoredCds(),
+            storedArtists = dataServiceLayer.getStoredArtists();
 
-        if (storedArtists && storedCds) {
+        // We have to acount for a user storing a bunch of artists before ever storing a CD
+        if (storedArtists) {
             for (var j = 0; j < storedArtists.length; j++) {
                 self.artists.push(new ArtistViewModel(storedArtists[j].name));
             }
+        }
+
+        // TODO: Big to do - this needs to not be dependent on storedArtists
+        if (storedArtists && storedCds) {
             for (var i = 0; i < storedCds.length; i++) {
                 self.cds.push(new CdViewModel(storedCds[i].album, storedArtists[i], storedCds[i].releaseDate));
             }
@@ -63,34 +50,28 @@ define(['knockout', './cd', './artist', './cd-form', './artist-form'], function(
 
         self.addCd = function() {
             self.cds.push(new CdViewModel(self.cdForm.albumInput(), self.cdForm.artistInput(), self.cdForm.releaseDateInput()));
-            self.clearStorage();
-            localStorage.setItem('CdCollection', ko.toJSON(self.cds()));
-            localStorage.setItem('ArtistCollection', ko.toJSON(self.artists()));
+            dataServiceLayer.saveArtistsAndCds();
             self.cdForm.hide();
             self.cdForm.resetForm();
         };
 
         self.addArtist = function() {
             self.artists.push(new ArtistViewModel(self.artistForm.nameInput()));
-            self.clearStorage();
-            localStorage.setItem('ArtistCollection', ko.toJSON(self.artists()));
-            localStorage.setItem('CdCollection', ko.toJSON(self.cds()));
+            dataServiceLayer.saveArtistsAndCds();
             self.artistForm.hide();
             self.artistForm.resetForm();
         };
 
         self.removeCd = function(cd) {
             self.cds.remove(cd);
-            self.clearStorage();
-            localStorage.setItem('CdCollection', ko.toJSON(self.cds()));
+            dataServiceLayer.saveArtistsAndCds();
             if (self.cds().length < 1) {
                 self.clearStorage();
             }
         };
 
         self.clearStorage = function() {
-            localStorage.removeItem('CdCollection');
-            localStorage.removeItem('ArtistCollection');
+            dataServiceLayer.clearStorage();
         };
 
         self.clear = function() {
