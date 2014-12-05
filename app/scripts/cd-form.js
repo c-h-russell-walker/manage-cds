@@ -30,40 +30,11 @@ define(['knockout'], function(ko) {
         };
 
         self.saveUpdate = function() {
-            var oldAlbumName = self.cd.album();
-            self.cd.album(self.albumInput());
-            
-            // TODO: get actual object reference from artists object in controller
-                // Should this be a map? so we can get it by name or something?
-            var storedArtists = JSON.parse(localStorage.getItem('ArtistCollection')),
-                artistRef;
-            for(var a=0; a < storedArtists.length; a++) {
-                if (storedArtists[a].name === self.artistInput()) {
-                    artistRef = storedArtists[a];
-                }
-            }
-            self.cd.artist(artistRef);
-            self.cd.releaseDate(self.releaseDateInput());
-            
-            self.updateLocalStorage(oldAlbumName);
-            // TODO - write this and remove any CRUD from form module
+            // Publish event which the page controller subscribes to and passes to dataservice
             emitter.emit('saveCd', self);
 
             self.resetForm();
             self.hide();
-        };
-
-        self.updateLocalStorage = function(oldAlbumName) {
-            var storedCds = JSON.parse(localStorage.getItem('CdCollection'));
-            for(var c=0; c < storedCds.length; c++) {
-                if (storedCds[c].album === oldAlbumName) {
-                    storedCds[c].album = self.cd.album();
-                    storedCds[c].artist = self.cd.artist;
-                    storedCds[c].releaseDate = self.cd.releaseDate();
-                }
-            }
-
-            localStorage.setItem('CdCollection', ko.toJSON(storedCds));
         };
 
         self.resetForm = function() {

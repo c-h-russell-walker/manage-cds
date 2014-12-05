@@ -14,9 +14,8 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
 
         // Our pub/subs
         emitter.on('saveCd', function processCdSave(formData) {
-            console.log('saveCd - Using Emitter: ', formData);
+            dataServiceLayer.saveCd(formData);
         });
-
         emitter.on('saveArtist', function processArtistSave(formData) {
             console.log('saveArtist - Using Emitter: ', formData);
         });

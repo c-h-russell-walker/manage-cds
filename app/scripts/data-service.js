@@ -32,6 +32,19 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
             localStorage.removeItem('ArtistCollection');
         };
 
+        self.updateCdLocalStorage = function(form, oldAlbumName) {
+            var storedCds = self.getStoredCds();
+            for(var c=0; c < storedCds.length; c++) {
+                if (storedCds[c].album === oldAlbumName) {
+                    storedCds[c].album = form.cd.album();
+                    storedCds[c].artist = form.cd.artist;
+                    storedCds[c].releaseDate = form.cd.releaseDate();
+                }
+            }
+
+            localStorage.setItem('CdCollection', ko.toJSON(storedCds));
+        };
+
         self.getStoredCds = function() {
             return JSON.parse(localStorage.getItem('CdCollection'));
         };
@@ -44,6 +57,24 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
             self.clearStorage();
             localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
             localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+        };
+
+        self.saveCd = function(form) {
+            var storedArtists = self.getStoredArtists(),
+                artistRef,
+                oldAlbumName = form.cd.album();
+            
+            form.cd.album(form.albumInput());
+            
+            for(var a=0; a < storedArtists.length; a++) {
+                if (storedArtists[a].name === form.artistInput()) {
+                    artistRef = storedArtists[a];
+                }
+            }
+            form.cd.artist(artistRef);
+            form.cd.releaseDate(form.releaseDateInput());
+            
+            self.updateCdLocalStorage(form, oldAlbumName);
         };
 
     };
