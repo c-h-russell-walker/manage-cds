@@ -19,26 +19,11 @@ define(['knockout'], function(ko) {
         };
 
         self.saveUpdate = function() {
-            var oldArtistName = self.artist.name();
-            self.artist.name(self.nameInput());
-
-            self.updateLocalStorage(oldArtistName);
-            // TODO - write this and remove any CRUD from form module
+            // Publish event which the page controller subscribes to and passes to dataservice
             emitter.emit('saveArtist', self);
 
             self.resetForm();
             self.hide();
-        };
-
-        self.updateLocalStorage = function(oldArtistName) {
-            var storedArtists = JSON.parse(localStorage.getItem('ArtistCollection'));
-            for(var a=0; a < storedArtists.length; a++) {
-                if (storedArtists[a].name === oldArtistName) {
-                    storedArtists[a].name = self.artist.name();
-                }
-            }
-
-            localStorage.setItem('ArtistCollection', ko.toJSON(storedArtists));
         };
 
         self.resetForm = function() {

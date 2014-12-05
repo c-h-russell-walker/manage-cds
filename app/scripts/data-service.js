@@ -45,6 +45,17 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
             localStorage.setItem('CdCollection', ko.toJSON(storedCds));
         };
 
+        self.updateArtistLocalStorage = function(form, oldArtistName) {
+            var storedArtists = self.getStoredArtists();
+            for(var a=0; a < storedArtists.length; a++) {
+                if (storedArtists[a].name === oldArtistName) {
+                    storedArtists[a].name = form.artist.name();
+                }
+            }
+
+            localStorage.setItem('ArtistCollection', ko.toJSON(storedArtists));
+        };
+
         self.getStoredCds = function() {
             return JSON.parse(localStorage.getItem('CdCollection'));
         };
@@ -75,6 +86,13 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
             form.cd.releaseDate(form.releaseDateInput());
             
             self.updateCdLocalStorage(form, oldAlbumName);
+        };
+
+        self.saveArtist = function(form) {
+            var oldArtistName = form.artist.name();
+            form.artist.name(form.nameInput());
+
+            self.updateArtistLocalStorage(form, oldArtistName);
         };
 
     };

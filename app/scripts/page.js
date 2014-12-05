@@ -17,7 +17,7 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
             dataServiceLayer.saveCd(formData);
         });
         emitter.on('saveArtist', function processArtistSave(formData) {
-            console.log('saveArtist - Using Emitter: ', formData);
+            dataServiceLayer.saveArtist(formData);
         });
 
         self.cds = ko.observableArray();
