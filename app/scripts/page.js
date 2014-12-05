@@ -52,16 +52,16 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
 
         // We have to acount for a user storing a bunch of artists before ever storing a CD
         if (storedArtists) {
-            for (var j = 0; j < storedArtists.length; j++) {
-                self.artists.push(new ArtistViewModel(storedArtists[j].name));
-            }
+            storedArtists.forEach(function iterateStoredArtists(artist) {
+                self.artists.push(new ArtistViewModel(artist.name));
+            });
         }
 
-        // TODO: Big to do - this needs to not be dependent on storedArtists
+        // This uses a data service getter function to retrieve the correct artist per CD
         if (storedArtists && storedCds) {
-            for (var i = 0; i < storedCds.length; i++) {
-                self.cds.push(new CdViewModel(storedCds[i].album, storedArtists[i], storedCds[i].releaseDate));
-            }
+            storedCds.forEach(function iterateStoredCds(cd) {
+                self.cds.push(new CdViewModel(cd.album, dataServiceLayer.getCdArtist(cd), cd.releaseDate));
+            });
         }
 
         self.addCd = function() {
