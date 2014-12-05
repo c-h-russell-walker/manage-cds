@@ -46,14 +46,24 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
         };
 
         self.updateArtistLocalStorage = function(form, oldArtistName) {
-            var storedArtists = self.getStoredArtists();
+            var storedArtists = self.getStoredArtists(),
+                storedCds = self.getStoredCds();
+            
             for(var a=0; a < storedArtists.length; a++) {
                 if (storedArtists[a].name === oldArtistName) {
                     storedArtists[a].name = form.artist.name();
                 }
             }
 
+            // We also need to update the values for any albums that have that artist
+            for(var c=0; c < storedCds.length; c++) {
+                if (storedCds[c].artist.name === oldArtistName) {
+                    storedCds[c].artist.name = form.artist.name();
+                }
+            }
+
             localStorage.setItem('ArtistCollection', ko.toJSON(storedArtists));
+            localStorage.setItem('CdCollection', ko.toJSON(storedCds));
         };
 
         self.getStoredCds = function() {
