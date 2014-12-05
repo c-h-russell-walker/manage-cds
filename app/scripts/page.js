@@ -17,6 +17,13 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
             dataServiceLayer.saveCd(formData);
         });
         emitter.on('saveArtist', function processArtistSave(formData) {
+            // Let's update our front end model
+            self.cds().forEach(function asdf(cd) {
+                if (cd.artist().name === formData.artist.name()) {
+                    cd.artist(formData.artist);
+                }
+            });
+            // This will save on the backend
             dataServiceLayer.saveArtist(formData);
         });
 
