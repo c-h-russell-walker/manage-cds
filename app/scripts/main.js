@@ -63,13 +63,7 @@ require.config({
     }
 });
 /*jshint unused: false */
-require(['app', 'require', 'jquery', 'knockout', 'underscore', 'bootstrap'], function (app, require, jQuery, ko, underscore, bootstrap) {
-    'use strict';
-    // // use app here
-    // console.log(app);
-    // console.log(require);
-    // console.log('Running jQuery %s', jQuery().jquery);
-    // console.log('Running Knockout %s', ko.version);
-    // console.log(underscore);
-    // console.log(bootstrap);
+require(['app', 'require', 'jquery', 'knockout', 'underscore', 'bootstrap'],
+    function (app, require, jQuery, ko, underscore, bootstrap) {
+        // We have unused set to false here so linter won't complain :)
 });
