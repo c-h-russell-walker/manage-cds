@@ -64,11 +64,29 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
             });
         }
 
+        // We have this in order to enable submit on enter keypress
+        self.cdFormSubmit = function() {
+            if (self.cdForm.save()) {
+                self.addCd();
+            } else {
+                self.cdForm.saveUpdate();
+            }
+        };
+
         self.addCd = function() {
             self.cds.push(new CdViewModel(self.cdForm.albumInput(), self.cdForm.artistInput(), self.cdForm.releaseDateInput()));
             dataServiceLayer.saveArtistsAndCds();
             self.cdForm.hide();
             self.cdForm.resetForm();
+        };
+
+        // We have this in order to enable submit on enter keypress
+        self.artistFormSubmit = function() {
+            if (self.artistForm.save()) {
+                self.addArtist();
+            } else {
+                self.artistForm.saveUpdate();
+            }
         };
 
         self.addArtist = function() {

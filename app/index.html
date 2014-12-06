@@ -98,7 +98,7 @@
 
         <div id="artistFormDialog" class="modal fade">
             <div class="modal-dialog">
-                <form>
+                <form data-bind="submit: artistFormSubmit">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -122,7 +122,7 @@
 
         <div id="cdFormDialog" class="modal fade">
             <div class="modal-dialog">
-                <form>
+                <form data-bind="submit: cdFormSubmit">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
