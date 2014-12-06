@@ -37,6 +37,11 @@ define(['knockout'], function(ko) {
             self.hide();
         };
 
+        self.addNewCd = function() {
+            self.resetForm();
+            self.show('album');
+        };
+
         self.resetForm = function() {
             self.formTitle('Add a CD');
             self.save(true);

@@ -31,9 +31,8 @@
         <div class="container">
             <div class="header">
                 <ul class="nav nav-pills pull-right">
-                    <li data-bind="css: { active: cdManager}"><a href="#" data-bind="click: manageCds">CDs</a></li>
-                    <li data-bind="css: { active: artistManager}"><a href="#" data-bind="click: manageArtists">Artists</a></li>
-                    <!-- <li><a href="#">Contact</a></li> -->
+                    <li data-bind="css: { active: cdManager}"><a data-bind="click: manageCds">CDs</a></li>
+                    <li data-bind="css: { active: artistManager}"><a data-bind="click: manageArtists">Artists</a></li>
                 </ul>
                 <h3 class="text-muted">Manage your CD Collection</h3>
             </div>
@@ -62,7 +61,7 @@
                                 <!-- /ko -->
                             </td>
                             <td><div class="releaseDate" data-bind="html: releaseDate, click: $root.cdForm.updateCd"></div></td>
-                            <td><a href="#" data-bind="click: $root.removeCd">Remove</a></td>
+                            <td><a data-bind="click: $root.removeCd">Remove</a></td>
                         </tr>    
                     </tbody>
                 </table>
@@ -71,9 +70,9 @@
                     <p>♥ with help from Yeoman</p>
                 </div>
 
-                <a data-toggle="modal" href="#cdFormDialog" class="btn btn-primary btn-large" data-bind="click: cdForm.resetForm">Add a CD to your collection</a>
+                <a class="btn btn-primary btn-large" data-bind="click: cdForm.addNewCd">Add a CD to your collection</a>
 
-                <a href="#" class="btn btn-primary btn-large pull-right" data-bind="click: clear, visible: cds().length > 0">Clear your collection</a>
+                <a class="btn btn-primary btn-large pull-right" data-bind="click: clear, visible: cds().length > 0">Clear your collection</a>
             </div>
 
             <div data-bind="visible: artistManager">
@@ -90,7 +89,7 @@
                     <p>♥ with help from Yeoman</p>
                 </div>
 
-                <a data-toggle="modal" href="#artistFormDialog" class="btn btn-primary btn-large" data-bind="click: artistForm.resetForm">Add an artist to use in your collection</a>
+                <a class="btn btn-primary btn-large" data-bind="click: artistForm.addNewArtist">Add an artist to use in your collection</a>
 
             </div>
 

@@ -26,6 +26,11 @@ define(['knockout'], function(ko) {
             self.hide();
         };
 
+        self.addNewArtist = function() {
+            self.resetForm();
+            self.show();
+        };
+
         self.resetForm = function() {
             self.formTitle('Add a new artist');
             self.save(true);
