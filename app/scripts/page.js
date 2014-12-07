@@ -18,7 +18,7 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
         });
         emitter.on('saveArtist', function processArtistSave(formData) {
             // Let's update our front end model
-            self.cds().forEach(function asdf(cd) {
+            self.cds().forEach(function iterateCdsOnArtistSave(cd) {
                 if (cd.artist().name === formData.artist.name()) {
                     cd.artist(formData.artist);
                 }
