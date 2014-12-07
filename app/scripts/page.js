@@ -35,14 +35,6 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
             return self.cds().length > 0 ? '(' + self.cds().length + ')' : '';
         }, self);
 
-        self.loadReleaseYears = function() {
-            var currentYear = new Date().getFullYear();
-
-            for (var y = currentYear; y > 1981; y--) {
-                self.releaseYears.push(y);
-            }
-        };
-
         self.preloadCds = function() {
             dataServiceLayer.preloadCds();
         };
@@ -124,9 +116,19 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
             self.artistManager(true);
         };
 
+        /* Local functions */
+        
+        function loadReleaseYears() {
+            var currentYear = new Date().getFullYear();
+
+            for (var y = currentYear; y > 1981; y--) {
+                self.releaseYears.push(y);
+            }
+        }
+
         // IIFE - use for initialization
         (function initializeCdPage() {
-            self.loadReleaseYears();
+            loadReleaseYears();
         })();
     };
 });
