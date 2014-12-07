@@ -33,7 +33,7 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
 
         self.cdAmount = ko.computed(function() {
             return self.cds().length > 0 ? '(' + self.cds().length + ')' : '';
-        }, self);
+        });
 
         self.preloadCds = function() {
             dataServiceLayer.preloadCds();
@@ -117,7 +117,7 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
         };
 
         /* Local functions */
-        
+
         function loadReleaseYears() {
             var currentYear = new Date().getFullYear();
 
