@@ -2,6 +2,7 @@ require.config({
     paths: {
         app: '../scripts/app',
         require: '../bower_components/requirejs/require',
+        tinyEmitter: '../bower_components/tiny-emitter/dist/tinyemitter',
         jquery: '../bower_components/jquery/jquery',
         knockout: '../bower_components/knockout/build/output/knockout-latest.debug',
         underscore: '../bower_components/underscore/underscore',
@@ -61,15 +62,8 @@ require.config({
         }
     }
 });
-
-require(['app', 'require', 'jquery', 'knockout', 'underscore', 'bootstrap'], function (app, require, jQuery, ko, underscore, bootstrap) {
-    'use strict';
-    // console.log(this);
-    // // use app here
-    // console.log(app);
-    // console.log(require);
-    // console.log(underscore);
-    // console.log('Running Knockout %s', ko.version);
-    // console.log('Running jQuery %s', jQuery().jquery);
-    // console.log(bootstrap);
+/*jshint unused: false */
+require(['app', 'require', 'jquery', 'knockout', 'underscore', 'bootstrap'],
+    function (app, require, jQuery, ko, underscore, bootstrap) {
+        // We have unused set to false here so linter won't complain :)
 });

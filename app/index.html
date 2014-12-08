@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <title>Manage your CDs</title>
+        <title>Manage your CD Collection</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -31,63 +31,115 @@
         <div class="container">
             <div class="header">
                 <ul class="nav nav-pills pull-right">
-                    <!-- @todo - make more pages -->
-                    <!-- <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li> -->
+                    <li data-bind="css: { active: cdManager}"><a data-bind="click: manageCds">CDs</a></li>
+                    <li data-bind="css: { active: artistManager}"><a data-bind="click: manageArtists">Artists</a></li>
                 </ul>
-                <h3 class="text-muted">Manage your CDs</h3>
+                <h3 class="text-muted">Manage your CD Collection</h3>
             </div>
 
-            <div class="jumbotron">
-                <h1>Hi there,</h1>
-                <p class="lead">I bet you want to manage your music.</p>
-                <p><a class="btn btn-lg btn-success" data-bind="click: preloadCds, visible: cds().length == 0">Pre Load some Music</a></p>
+            <div data-bind="visible: cdManager">
+                <div class="jumbotron">
+                    <h1>Hi there,</h1>
+                    <p class="lead">I bet you want to manage your music collection.</p>
+                    <p><a class="btn btn-lg btn-success" data-bind="click: preloadCds, visible: cds().length === 0">Pre Load some Music</a></p>
+                </div>
+
+                <div class="row">
+                    CD Collection <span data-bind="text: cdAmount"></span>
+                </div>
+
+                <table class="table">
+                    <thead><tr>
+                        <th>Album</th><th>Artist</th><th>Release Date</th><th></th>
+                    </tr></thead>
+                    <tbody data-bind="foreach: cds">
+                        <tr>
+                            <td><div class="album" data-bind="html: album, click: $root.cdForm.updateCd"></div></td>
+                            <td>
+                                <!-- ko if: artist() -->
+                                <div class="artist" data-bind="html: artist().name, click: $root.cdForm.updateCd"></div>
+                                <!-- /ko -->
+                            </td>
+                            <td><div class="releaseDate" data-bind="html: releaseDate, click: $root.cdForm.updateCd"></div></td>
+                            <td><a data-bind="click: $root.removeCd">Remove</a></td>
+                        </tr>    
+                    </tbody>
+                </table>
+
+                <div class="footer">
+                    <p>♥ with help from Yeoman</p>
+                </div>
+
+                <a class="btn btn-primary btn-large" data-bind="click: cdForm.addNewCd">Add a CD to your collection</a>
+
+                <a class="btn btn-primary btn-large pull-right" data-bind="click: clear, visible: cds().length > 0">Clear your collection</a>
             </div>
 
-            <div class="row">
-                CD Collection (<span data-bind="text: cds().length"></span>)
+            <div data-bind="visible: artistManager">
+
+                <div class="row">
+                    Artist List <span data-bind="text: '('+artists().length+')', visible: artists().length > 0"></span>
+                </div>
+
+                <ul data-bind="foreach: artists">
+                    <li class="artist" data-bind="html: name, click: $root.artistForm.updateArtist"></li>
+                </ul>
+
+                <div class="footer">
+                    <p>♥ with help from Yeoman</p>
+                </div>
+
+                <a class="btn btn-primary btn-large" data-bind="click: artistForm.addNewArtist">Add an artist to use in your collection</a>
+
             </div>
-
-            <table class="table">
-                <thead><tr>
-                    <th>Album</th><th>Artist</th><th>Release Date</th><th></th>
-                </tr></thead>
-                <tbody data-bind="foreach: cds">
-                    <tr>
-                        <td><div data-bind="html: album, click: function() { $root.cdForm.updateCd($data) }"></div></td>
-                        <td><div data-bind="html: artist, click: function() { $root.cdForm.updateCd($data) }"></div></td>
-                        <td><div data-bind="html: releaseDate, click: function() { $root.cdForm.updateCd($data) }"></div></td>
-                        <td><a href="#" data-bind="click: $root.removeCd">Remove</a></td>
-                    </tr>    
-                </tbody>
-            </table>
-
-            <div class="footer">
-                <p>♥ with help from Yeoman</p>
-            </div>
-
-            <a data-toggle="modal" href="#windowTitleDialog" class="btn btn-primary btn-large" data-bind="click: cdForm.resetForm">Add a CD to your collection</a>
 
         </div>
 
-        <div id="windowTitleDialog" class="modal fade">
+        <div id="artistFormDialog" class="modal fade">
             <div class="modal-dialog">
-                <form>
+                <form data-bind="submit: artistFormSubmit">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" data-bind="text: artistForm.formTitle"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="name">Artist:</label>
+                                <input type="text" class="form-control" id="name" data-bind="value: artistForm.nameInput, valueUpdate: 'input'" /></td>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: artistForm.hide">Close</button>
+                            <button data-bind="click: addArtist, visible: artistForm.save, enable: artistForm.nameInput" type="button" id="save-artist" class="btn btn-lg">Save</button>
+                            <button data-bind="click: artistForm.saveUpdate, visible: artistForm.update, enable: artistForm.nameInput" type="button" id="update-artist" class="btn btn-lg">Update</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </form>
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <div id="cdFormDialog" class="modal fade">
+            <div class="modal-dialog">
+                <form data-bind="submit: cdFormSubmit">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             <h4 class="modal-title" data-bind="text: cdForm.formTitle"></h4>
                         </div>
-                        <!-- @todo Get these inputs to be readonly once clicked so you can't edit in input while modal form is up -->
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="album">Album:</label>
-                                <input type="text" class="form-control" id="album" data-bind="value: cdForm.albumInput" /></td>
+                                <input type="text" class="form-control" id="album" data-bind="value: cdForm.albumInput, valueUpdate: 'input'" /></td>
                             </div>
                             <div class="form-group">
                                 <label for="artist">Artist:</label>
-                                <input type="text" class="form-control" id="artist" data-bind="value: cdForm.artistInput" /></td>
+                                <select class="form-control" class="form-control" id="artist" data-bind="options: artists,
+                                                                                                         optionsText: 'name',
+                                                                                                         optionsValue: 'name',
+                                                                                                         value: cdForm.artistInput,
+                                                                                                         valueAllowUnset: 'true',
+                                                                                                         optionsCaption: 'Choose an artist'" /></select>
                             </div>
                             <div class="form-group">
                                 <label for="releaseDate">Release Date:</label>
@@ -98,8 +150,9 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click: cdForm.hide">Close</button>
-                            <button data-bind="click: addCd, visible: cdForm.save" type="button" id="save-cd" class="btn btn-lg">Save</button>
-                            <button data-bind="click: cdForm.saveUpdate, visible: cdForm.update" type="button" id="update-cd" class="btn btn-lg">Update</button>
+                            <!-- Let's allow a user to add a CD even if they don't know the release date or the artist -->
+                            <button data-bind="click: addCd, visible: cdForm.save, enable: cdForm.albumInput" type="button" id="save-cd" class="btn btn-lg">Save</button>
+                            <button data-bind="click: cdForm.saveUpdate, visible: cdForm.update, enable: cdForm.albumInput" type="button" id="update-cd" class="btn btn-lg">Update</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </form>

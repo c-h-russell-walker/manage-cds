@@ -1,0 +1,39 @@
+{
+  "name": "tiny-emitter",
+  "main": "dist/tinyemitter.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/scottcorgan/tiny-emitter",
+  "authors": [
+    "Scott Corgan <scottcorgan@gmail.com>"
+  ],
+  "description": "A tiny (less than 1k) event emitter library",
+  "keywords": [
+    "emitter",
+    "tiny",
+    "event",
+    "pubsub",
+    "bind"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    ".gitignore",
+    "index.js",
+    "package.json",
+    "bower.json"
+  ],
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.0",
+    "commit": "81532e3600a6284a9cb87ef2f625e89df8f9282a"
+  },
+  "_source": "git://github.com/scottcorgan/tiny-emitter.git",
+  "_target": "~1.0.0",
+  "_originalSource": "tiny-emitter",
+  "_direct": true
+}
