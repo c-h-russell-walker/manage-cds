@@ -66,7 +66,8 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
         };
 
         self.addCd = function() {
-            self.cds.push(new CdViewModel(self.cdForm.albumInput(), self.cdForm.artistInput(), self.cdForm.releaseDateInput()));
+            var artistRef = dataServiceLayer.getArtistByName(self.cdForm.artistInput());
+            self.cds.push(new CdViewModel(self.cdForm.albumInput(), artistRef, self.cdForm.releaseDateInput()));
             dataServiceLayer.saveArtistsAndCds();
             self.cdForm.hide();
             self.cdForm.resetForm();

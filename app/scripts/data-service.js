@@ -35,8 +35,19 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
         self.getCdArtist = function(cd) {
             var storedArtists = self.getStoredArtists(),
                 returnArtist;
-            storedArtists.forEach(function iterateStoredArtistsToGetArtist(artist) {
+            storedArtists.forEach(function iterateStoredArtistsToGetArtistFromCd(artist) {
                 if (cd.artist && cd.artist.name === artist.name) {
+                    returnArtist = artist;
+                }
+            });
+            return returnArtist;
+        };
+
+        self.getArtistByName = function(name) {
+            var storedArtists = self.getStoredArtists(),
+                returnArtist;
+            storedArtists.forEach(function iterateStoredArtistsToGetArtistByName(artist) {
+                if (name === artist.name) {
                     returnArtist = artist;
                 }
             });
