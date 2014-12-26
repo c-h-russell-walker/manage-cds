@@ -4,27 +4,37 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
         var self = this;
         
         self.preloadCds = function() {
-            var tempDdf,
-                tempNumber12,
-                tempTheFaulty;
-            if(!localStorage.getItem('ArtistCollection')) {
-                tempDdf = new ArtistViewModel('DDF');
-                tempNumber12 = new ArtistViewModel('Number 12');
-                tempTheFaulty = new ArtistViewModel('The Faulty');
-                CdPageViewModel.artists.push(tempDdf);
-                CdPageViewModel.artists.push(tempNumber12);
-                CdPageViewModel.artists.push(tempTheFaulty);
-            }
+            var tempArtists = ['DDF', 'The Number 12', 'The Faulty'].map(function (name) {
+                return new ArtistViewModel(name);
+            });
 
-            if (!localStorage.getItem('CdCollection')) {
-                CdPageViewModel.cds.push(new CdViewModel('Means to an End', tempDdf, '2000'));
-                CdPageViewModel.cds.push(new CdViewModel('Mongrel', tempNumber12, '2007'));
-                CdPageViewModel.cds.push(new CdViewModel('The Kids are Ready', tempTheFaulty, '2003'));
-            }
+            [].push.apply(CdPageViewModel.artists(), tempArtists);
 
-            localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+            var tempCds = [{
+                artist: tempArtists[0],
+                album: 'Means to an End',
+                releaseDate: '2000',
+            },
+            {
+                artist: tempArtists[1],
+                album: 'Mongrel',
+                releaseDate: '2007',
+            },
+            {
+                artist: tempArtists[2],
+                album: 'The Kids are Ready',
+                releaseDate: '2003',
+            },
+            ].map(function (albumObj) {
+                return new CdViewModel(albumObj.album, albumObj.artist, albumObj.releaseDate);
+            });
 
-            localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
+            [].push.apply(CdPageViewModel.cds(), tempCds);
+
+            CdPageViewModel.cds.valueHasMutated();
+            CdPageViewModel.artists.valueHasMutated();
+
+            self.saveArtistsAndCds();
         };
 
         self.clearStorage = function() {
