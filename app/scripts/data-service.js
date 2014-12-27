@@ -1,5 +1,6 @@
 'use strict';
-define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewModel) {
+define(['knockout', 'underscore', './cd', './artist'],
+        function(ko, _, CdViewModel, ArtistViewModel) {
     return function DataService(CdPageViewModel) {
         var self = this;
         
@@ -55,14 +56,15 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
         };
 
         self.updateCdLocalStorage = function(form, oldAlbumName) {
-            var storedCds = self.getStoredCds();
-            storedCds.forEach(function iterateStoredCds(cd) {
-                if (cd.album === oldAlbumName) {
-                    cd.album = form.cd.album();
-                    cd.artist = form.cd.artist;
-                    cd.releaseDate = form.cd.releaseDate();
-                }
-            });
+            var storedCds = self.getStoredCds(),
+                cd = findCdByAlbumName(storedCds, oldAlbumName);
+            if (!cd) {
+                throw new Error('Hmm, can\'t be updating if we don\'t even have it.');
+            }
+
+            cd.album = form.cd.album();
+            cd.artist = form.cd.artist;
+            cd.releaseDate = form.cd.releaseDate();
 
             localStorage.setItem('CdCollection', ko.toJSON(storedCds));
         };
@@ -127,5 +129,17 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
             self.updateArtistLocalStorage(form, oldArtistName);
         };
 
+        /* Local functions */
+
+        function findCdByAlbumName(storedCds, oldAlbumName) {
+            /* We're explicitly passing in storedCds so we have reference to the exact object */
+            if (!storedCds) {
+                throw new Error('Hmm, we need you to pass in storedCds. Try using getStoredCds().');
+            }
+
+            return _.find(storedCds, function albumNameEquality(cd) {
+                return cd.album === oldAlbumName;
+            });
+        }
     };
 });
