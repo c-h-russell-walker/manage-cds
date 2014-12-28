@@ -34,7 +34,7 @@ define(['knockout', 'underscore', './cd', './artist'],
         };
 
         self.getCdArtist = function(cd) {
-            if (cd.artist.name) {
+            if (cd.artist) {
                 return findArtistByName(self.getStoredArtists(), cd.artist.name);
             }
         };
@@ -49,7 +49,7 @@ define(['knockout', 'underscore', './cd', './artist'],
                 cd = findCdByAlbumName(storedCds, oldAlbumName);
 
             if (!cd) {
-                throw new Error('Hmm, can\'t be updating if we don\'t even have it.');
+                throw new Error('Hmm, can\'t be updating an album if we don\'t even have it.');
             }
 
             cd.album = form.cd.album();
@@ -60,15 +60,26 @@ define(['knockout', 'underscore', './cd', './artist'],
         };
 
         self.updateArtistLocalStorage = function(form, oldArtistName) {
-            var storedCds = self.getStoredCds(),
+            var artistRef,
+                storedCds = self.getStoredCds(),
                 storedArtists = self.getStoredArtists();
             
             // Set new name
-            findArtistByName(storedArtists, oldArtistName).name = form.artist.name();
+            artistRef = findArtistByName(storedArtists, oldArtistName);
+            if (!artistRef) {
+                throw new Error('Hmm, can\'t be updating an artist if we don\'t even have it.');
+            }
+            artistRef.name = form.artist.name();
 
             // We also need to update the values for any albums that have that artist
             var cds = findCdsByArtistName(storedCds, oldArtistName);
+            if (!cds) {
+                throw new Error('Hmm, something went wrong while trying to get CDs by an artist.');
+            }
+
+            // cds can be an empty array if that artist has no CDs in our collection
             _.each(cds, function updateArtistName(cd) {
+                console.log(cd);
                 cd.artist.name = form.artist.name();
             });
 
@@ -98,6 +109,7 @@ define(['knockout', 'underscore', './cd', './artist'],
 
             artistRef = findArtistByName(self.getStoredArtists(), form.artistInput());
 
+            // artistRef can be undefined if no artist is listed when updating a CD
             form.cd.artist(artistRef);
             form.cd.releaseDate(form.releaseDateInput());
             
