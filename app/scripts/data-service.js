@@ -1,15 +1,15 @@
 'use strict';
 define(['knockout', 'underscore', './cd', './artist'],
         function(ko, _, CdViewModel, ArtistViewModel) {
-    return function DataService(CdPageViewModel) {
+    return function DataService() {
         var self = this;
         
-        self.preloadCds = function() {
+        self.preloadCds = function(cdPageViewModel) {
             var tempArtists = ['DDF', 'The Number 12', 'The Faulty'].map(function (name) {
                 return new ArtistViewModel(name);
             });
 
-            [].push.apply(CdPageViewModel.artists(), tempArtists);
+            [].push.apply(cdPageViewModel.artists(), tempArtists);
 
             var tempCds = [{
                 artist: tempArtists[0],
@@ -30,12 +30,12 @@ define(['knockout', 'underscore', './cd', './artist'],
                 return new CdViewModel(albumObj.album, albumObj.artist, albumObj.releaseDate);
             });
 
-            [].push.apply(CdPageViewModel.cds(), tempCds);
+            [].push.apply(cdPageViewModel.cds(), tempCds);
 
-            CdPageViewModel.cds.valueHasMutated();
-            CdPageViewModel.artists.valueHasMutated();
+            cdPageViewModel.cds.valueHasMutated();
+            cdPageViewModel.artists.valueHasMutated();
 
-            self.saveArtistsAndCds();
+            self.saveArtistsAndCds(cdPageViewModel);
         };
 
         self.clearStorage = function() {
@@ -104,10 +104,10 @@ define(['knockout', 'underscore', './cd', './artist'],
             return JSON.parse(localStorage.getItem('ArtistCollection'));
         };
 
-        self.saveArtistsAndCds = function() {
+        self.saveArtistsAndCds = function(cdPageViewModel) {
             self.clearStorage();
-            localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
-            localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+            localStorage.setItem('CdCollection', ko.toJSON(cdPageViewModel.cds()));
+            localStorage.setItem('ArtistCollection', ko.toJSON(cdPageViewModel.artists()));
         };
 
         self.saveCd = function(form) {

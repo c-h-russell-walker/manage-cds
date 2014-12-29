@@ -63,7 +63,7 @@ require.config({
     }
 });
 /*jshint unused: false */
-require(['app', 'require', 'jquery', 'knockout', 'bootstrap'],
-    function (app, require, jQuery, ko, bootstrap) {
+require(['app', 'require', 'bootstrap'],
+    function (app, require, bootstrap) {
         // We have unused set to false here so linter won't complain :)
 });
