@@ -79,7 +79,6 @@ define(['knockout', 'underscore', './cd', './artist'],
 
             // cds can be an empty array if that artist has no CDs in our collection
             _.each(cds, function updateArtistName(cd) {
-                console.log(cd);
                 cd.artist.name = form.artist.name();
             });
 
