@@ -35,6 +35,18 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
             return self.cds().length > 0 ? '(' + self.cds().length + ')' : '';
         });
 
+        self.preloadVisible = ko.computed(function() {
+            return self.cds().length <= 0 && self.artists().length <= 0;
+        });
+
+        self.clearCollectionVisible = ko.computed(function() {
+            return self.cds().length > 0 || self.artists().length > 0;
+        });
+
+        self.artistsLoadedMessage = ko.computed(function() {
+            return self.cds().length <= 0 && self.artists().length > 0;
+        });
+
         self.preloadCds = function() {
             dataServiceLayer.preloadCds();
         };

@@ -41,7 +41,8 @@
                 <div class="jumbotron">
                     <h1>Hi there,</h1>
                     <p class="lead">I bet you want to manage your music collection.</p>
-                    <p><a class="btn btn-lg btn-success" data-bind="click: preloadCds, visible: cds().length === 0">Pre Load some Music</a></p>
+                    <p data-bind="visible: artistsLoadedMessage">Looks like you may have artists loaded that you can assign to new CDs.</p>
+                    <p><a class="btn btn-lg btn-success" data-bind="click: preloadCds, visible: preloadVisible">Pre Load some Music</a></p>
                 </div>
 
                 <div class="row">
@@ -72,7 +73,7 @@
 
                 <a class="btn btn-primary btn-large" data-bind="click: cdForm.addNewCd">Add a CD to your collection</a>
 
-                <a class="btn btn-primary btn-large pull-right" data-bind="click: clear, visible: cds().length > 0">Clear your collection</a>
+                <a class="btn btn-primary btn-large pull-right" data-bind="click: clear, visible: clearCollectionVisible">Clear your collection</a>
             </div>
 
             <div data-bind="visible: artistManager">
