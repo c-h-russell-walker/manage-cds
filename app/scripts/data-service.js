@@ -35,12 +35,6 @@ define(['knockout', 'underscore', './cd', './artist'],
             localStorage.removeItem('ArtistCollection');
         };
 
-        self.getCdArtist = function(cd) {
-            if (cd.artist.name) {
-                return findArtistByName(cd.artist.name);
-            }
-        };
-
         /* This is now just a wrapper to publicly access our newly written finder function */
         self.getArtistByName = function(name) {
             return findArtistByName(name);
