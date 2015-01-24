@@ -50,7 +50,7 @@ define(['knockout', 'underscore', './cd', './artist'],
             var cd = findCdByAlbumName(oldAlbumName);
 
             if (!cd) {
-                throw new Error('Hmm, can\'t be updating if we don\'t even have it.');
+                throw new Error('Hmm, can\'t be updating an album if we don\'t even have it.');
             }
 
             cd.album = form.cd.album();
@@ -61,11 +61,19 @@ define(['knockout', 'underscore', './cd', './artist'],
         };
 
         self.updateArtistLocalStorage = function(form, oldArtistName) {
+            var artistRef;
             // Set new name
-            findArtistByName(oldArtistName).name = form.artist.name();
+            artistRef = findArtistByName(oldArtistName);
+            if (!artistRef) {
+                throw new Error('Hmm, can\'t be updating an artist if we don\'t even have it.');
+            }
+            artistRef.name = form.artist.name();
 
             // We also need to update the values for any albums that have that artist
             var cds = findCdsByArtistName(oldArtistName);
+            if (!cds) {
+                throw new Error('Hmm, something went wrong while trying to get CDs by an artist.');
+            }
             _.each(cds, function updateArtistName(cd) {
                 cd.artist.name = form.artist.name();
             });
@@ -98,6 +106,7 @@ define(['knockout', 'underscore', './cd', './artist'],
 
             artistRef = findArtistByName(form.artistInput());
 
+            // artistRef can be undefined if no artist is listed when updating a CD
             form.cd.artist(artistRef);
             form.cd.releaseDate(form.releaseDateInput());
             
