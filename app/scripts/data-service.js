@@ -114,9 +114,7 @@ define(['knockout', 'underscore', './cd', './artist'],
         /* Local functions */
 
         function findCdByAlbumName(albumName) {
-            return _.find(self.getStoredCds(), function albumNameEquality(cd) {
-                return cd.album === albumName;
-            });
+            return _.findWhere(self.getStoredCds(), {album: albumName});
         }
 
         function findCdsByArtistName(name) {
@@ -126,9 +124,7 @@ define(['knockout', 'underscore', './cd', './artist'],
         }
 
         function findArtistByName(name) {
-            return _.find(self.getStoredArtists(), function artistNameEquality(artist) {
-                return artist.name === name;
-            });
+            return _.findWhere(self.getStoredArtists(), {name: name});
         }
     };
 });
