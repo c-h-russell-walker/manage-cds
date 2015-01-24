@@ -2,7 +2,9 @@
 define(['knockout', 'underscore', './cd', './artist'],
         function(ko, _, CdViewModel, ArtistViewModel) {
     return function DataService(CdPageViewModel) {
-        var self = this;
+        var self = this,
+            storedCds,
+            storedArtists;
         
         self.preloadCds = function() {
             var tempDdf,
@@ -35,18 +37,17 @@ define(['knockout', 'underscore', './cd', './artist'],
 
         self.getCdArtist = function(cd) {
             if (cd.artist.name) {
-                return findArtistByName(self.getStoredArtists(), cd.artist.name);
+                return findArtistByName(cd.artist.name);
             }
         };
 
         /* This is now just a wrapper to publicly access our newly written finder function */
         self.getArtistByName = function(name) {
-            return findArtistByName(self.getStoredArtists(), name);
+            return findArtistByName(name);
         };
 
         self.updateCdLocalStorage = function(form, oldAlbumName) {
-            var storedCds = self.getStoredCds(),
-                cd = findCdByAlbumName(storedCds, oldAlbumName);
+            var cd = findCdByAlbumName(oldAlbumName);
 
             if (!cd) {
                 throw new Error('Hmm, can\'t be updating if we don\'t even have it.');
@@ -56,32 +57,31 @@ define(['knockout', 'underscore', './cd', './artist'],
             cd.artist = form.cd.artist;
             cd.releaseDate = form.cd.releaseDate();
 
-            localStorage.setItem('CdCollection', ko.toJSON(storedCds));
+            localStorage.setItem('CdCollection', ko.toJSON(self.getStoredCds()));
         };
 
         self.updateArtistLocalStorage = function(form, oldArtistName) {
-            var storedCds = self.getStoredCds(),
-                storedArtists = self.getStoredArtists();
-            
             // Set new name
-            findArtistByName(storedArtists, oldArtistName).name = form.artist.name();
+            findArtistByName(oldArtistName).name = form.artist.name();
 
             // We also need to update the values for any albums that have that artist
-            var cds = findCdsByArtistName(storedCds, oldArtistName);
+            var cds = findCdsByArtistName(oldArtistName);
             _.each(cds, function updateArtistName(cd) {
                 cd.artist.name = form.artist.name();
             });
 
-            localStorage.setItem('ArtistCollection', ko.toJSON(storedArtists));
-            localStorage.setItem('CdCollection', ko.toJSON(storedCds));
+            localStorage.setItem('ArtistCollection', ko.toJSON(self.getStoredArtists()));
+            localStorage.setItem('CdCollection', ko.toJSON(self.getStoredCds()));
         };
 
         self.getStoredCds = function() {
-            return JSON.parse(localStorage.getItem('CdCollection'));
+            storedCds = storedCds || JSON.parse(localStorage.getItem('CdCollection'));
+            return storedCds;
         };
 
         self.getStoredArtists = function() {
-            return JSON.parse(localStorage.getItem('ArtistCollection'));
+            storedArtists = storedArtists || JSON.parse(localStorage.getItem('ArtistCollection'));
+            return storedArtists;
         };
 
         self.saveArtistsAndCds = function() {
@@ -96,7 +96,7 @@ define(['knockout', 'underscore', './cd', './artist'],
             
             form.cd.album(form.albumInput());
 
-            artistRef = findArtistByName(self.getStoredArtists(), form.artistInput());
+            artistRef = findArtistByName(form.artistInput());
 
             form.cd.artist(artistRef);
             form.cd.releaseDate(form.releaseDateInput());
@@ -113,30 +113,20 @@ define(['knockout', 'underscore', './cd', './artist'],
 
         /* Local functions */
 
-        function findCdByAlbumName(storedCds, oldAlbumName) {
-            /* We're explicitly passing in storedCds so we have reference to the exact object */
-            if (!storedCds) {
-                throw new Error('Hmm, we need you to pass in storedCds. Try using getStoredCds().');
-            }
-
-            return _.find(storedCds, function albumNameEquality(cd) {
-                return cd.album === oldAlbumName;
+        function findCdByAlbumName(albumName) {
+            return _.find(self.getStoredCds(), function albumNameEquality(cd) {
+                return cd.album === albumName;
             });
         }
 
-        function findCdsByArtistName(storedCds, name) {
-            return _.filter(storedCds, function cdArtistNameEquality(cd) {
+        function findCdsByArtistName(name) {
+            return _.filter(self.getStoredCds(), function cdArtistNameEquality(cd) {
                 return cd.artist.name === name;
             });
         }
 
-        function findArtistByName(storedArtists, name) {
-            /* We're explicitly passing in storedArtists so we have reference to the exact object */
-            if (!storedArtists) {
-                throw new Error('Hmm, we need you to pass in storedArtists. Try using getStoredArtists().');
-            }
-
-            return _.find(storedArtists, function artistNameEquality(artist) {
+        function findArtistByName(name) {
+            return _.find(self.getStoredArtists(), function artistNameEquality(artist) {
                 return artist.name === name;
             });
         }
