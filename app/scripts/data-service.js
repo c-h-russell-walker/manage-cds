@@ -40,7 +40,7 @@ define(['knockout', 'underscore', './cd', './artist'],
             return findArtistByName(name);
         };
 
-        self.updateCdLocalStorage = function(form, oldAlbumName) {
+        self.updateCdStorage = function(form, oldAlbumName) {
             var cd = findCdByAlbumName(oldAlbumName);
 
             if (!cd) {
@@ -54,7 +54,7 @@ define(['knockout', 'underscore', './cd', './artist'],
             localStorage.setItem('CdCollection', ko.toJSON(self.getStoredCds()));
         };
 
-        self.updateArtistLocalStorage = function(form, oldArtistName) {
+        self.updateArtistStorage = function(form, oldArtistName) {
             var artistRef;
             // Set new name
             artistRef = findArtistByName(oldArtistName);
@@ -104,14 +104,14 @@ define(['knockout', 'underscore', './cd', './artist'],
             form.cd.artist(artistRef);
             form.cd.releaseDate(form.releaseDateInput());
             
-            self.updateCdLocalStorage(form, oldAlbumName);
+            self.updateCdStorage(form, oldAlbumName);
         };
 
         self.saveArtist = function(form) {
             var oldArtistName = form.artist.name();
             form.artist.name(form.nameInput());
 
-            self.updateArtistLocalStorage(form, oldArtistName);
+            self.updateArtistStorage(form, oldArtistName);
         };
 
         /* Local functions */
