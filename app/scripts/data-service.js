@@ -1,7 +1,7 @@
 'use strict';
 define(['knockout', 'underscore', './cd', './artist'],
         function(ko, _, CdViewModel, ArtistViewModel) {
-    return function DataService(CdPageViewModel) {
+    return function DataService(CdModelCollection) {
         var self = this,
             storedCds,
             storedArtists;
@@ -14,20 +14,20 @@ define(['knockout', 'underscore', './cd', './artist'],
                 tempDdf = new ArtistViewModel('DDF');
                 tempNumber12 = new ArtistViewModel('Number 12');
                 tempTheFaulty = new ArtistViewModel('The Faulty');
-                CdPageViewModel.artists.push(tempDdf);
-                CdPageViewModel.artists.push(tempNumber12);
-                CdPageViewModel.artists.push(tempTheFaulty);
+                CdModelCollection.artists.push(tempDdf);
+                CdModelCollection.artists.push(tempNumber12);
+                CdModelCollection.artists.push(tempTheFaulty);
             }
 
             if (!localStorage.getItem('CdCollection')) {
-                CdPageViewModel.cds.push(new CdViewModel('Means to an End', tempDdf, '2000'));
-                CdPageViewModel.cds.push(new CdViewModel('Mongrel', tempNumber12, '2007'));
-                CdPageViewModel.cds.push(new CdViewModel('The Kids are Ready', tempTheFaulty, '2003'));
+                CdModelCollection.cds.push(new CdViewModel('Means to an End', tempDdf, '2000'));
+                CdModelCollection.cds.push(new CdViewModel('Mongrel', tempNumber12, '2007'));
+                CdModelCollection.cds.push(new CdViewModel('The Kids are Ready', tempTheFaulty, '2003'));
             }
 
-            localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+            localStorage.setItem('ArtistCollection', ko.toJSON(CdModelCollection.artists()));
 
-            localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
+            localStorage.setItem('CdCollection', ko.toJSON(CdModelCollection.cds()));
         };
 
         self.clearStorage = function() {
@@ -93,8 +93,8 @@ define(['knockout', 'underscore', './cd', './artist'],
         };
 
         self.saveArtistsAndCds = function() {
-            localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
-            localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+            localStorage.setItem('CdCollection', ko.toJSON(CdModelCollection.cds()));
+            localStorage.setItem('ArtistCollection', ko.toJSON(CdModelCollection.artists()));
             confirmStorageSynced();
         };
 
@@ -132,15 +132,15 @@ define(['knockout', 'underscore', './cd', './artist'],
         /* Local functions */
 
         function confirmStorageSynced() {
-            if (CdPageViewModel.cds().length !== JSON.parse(localStorage.getItem('CdCollection').length)) {
+            if (CdModelCollection.cds().length !== JSON.parse(localStorage.getItem('CdCollection').length)) {
                 storedCds = null;
                 storedCds = self.getStoredCds();
-                localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
+                localStorage.setItem('CdCollection', ko.toJSON(CdModelCollection.cds()));
             }
-            if (CdPageViewModel.artists().length !== JSON.parse(localStorage.getItem('ArtistCollection').length)) {
+            if (CdModelCollection.artists().length !== JSON.parse(localStorage.getItem('ArtistCollection').length)) {
                 storedArtists = null;
                 storedArtists = self.getStoredArtists();
-                localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+                localStorage.setItem('ArtistCollection', ko.toJSON(CdModelCollection.artists()));
             }
         }
 
