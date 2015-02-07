@@ -66,9 +66,9 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
         };
 
         self.addCd = function() {
-            var artistRef = dataServiceLayer.getArtistByName(self.cdForm.artistInput());
+            var artistRef = (self.cdForm.artistInput()) ? dataServiceLayer.getArtistByName(self.cdForm.artistInput()) : null;
             self.cds.push(new CdViewModel(self.cdForm.albumInput(), artistRef, self.cdForm.releaseDateInput()));
-            dataServiceLayer.saveArtistsAndCds();
+            dataServiceLayer.addToCdStorage();
             self.cdForm.hide();
             self.cdForm.resetForm();
         };
@@ -91,7 +91,7 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
 
         self.removeCd = function(cd) {
             self.cds.remove(cd);
-            dataServiceLayer.saveArtistsAndCds();
+            dataServiceLayer.removeCdFromStorage(cd);
             if (self.cds().length < 1) {
                 self.clearStorage();
             }

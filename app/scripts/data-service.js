@@ -41,6 +41,7 @@ define(['knockout', 'underscore', './cd', './artist'],
         };
 
         self.updateCdStorage = function(form, oldAlbumName) {
+            confirmStorageSynced();
             var cd = findCdByAlbumName(oldAlbumName);
 
             if (!cd) {
@@ -52,6 +53,11 @@ define(['knockout', 'underscore', './cd', './artist'],
             cd.releaseDate = form.cd.releaseDate();
 
             localStorage.setItem('CdCollection', ko.toJSON(self.getStoredCds()));
+        };
+
+        self.addToCdStorage = function() {
+            localStorage.removeItem('CdCollection');
+            self.saveArtistsAndCds();
         };
 
         self.updateArtistStorage = function(form, oldArtistName) {
@@ -87,12 +93,21 @@ define(['knockout', 'underscore', './cd', './artist'],
         };
 
         self.saveArtistsAndCds = function() {
-            self.clearStorage();
             localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
             localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+            confirmStorageSynced();
+        };
+
+        self.removeCdFromStorage = function(staleCd) {
+            storedCds = _.filter(storedCds, function(cd) {
+                return cd.album !== staleCd.album();
+            });
+            confirmStorageSynced();
         };
 
         self.saveCd = function(form) {
+            confirmStorageSynced();
+
             var artistRef,
                 oldAlbumName = form.cd.album();
             
@@ -116,18 +131,31 @@ define(['knockout', 'underscore', './cd', './artist'],
 
         /* Local functions */
 
+        function confirmStorageSynced() {
+            if (CdPageViewModel.cds().length !== JSON.parse(localStorage.getItem('CdCollection').length)) {
+                storedCds = null;
+                storedCds = self.getStoredCds();
+                localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
+            }
+            if (CdPageViewModel.artists().length !== JSON.parse(localStorage.getItem('ArtistCollection').length)) {
+                storedArtists = null;
+                storedArtists = self.getStoredArtists();
+                localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+            }
+        }
+
         function findCdByAlbumName(albumName) {
-            return _.findWhere(self.getStoredCds(), {album: albumName});
+            return _.findWhere(storedCds, {album: albumName});
         }
 
         function findCdsByArtistName(name) {
-            return _.filter(self.getStoredCds(), function cdArtistNameEquality(cd) {
+            return _.filter(storedCds, function cdArtistNameEquality(cd) {
                 return cd.artist.name === name;
             });
         }
 
         function findArtistByName(name) {
-            return _.findWhere(self.getStoredArtists(), {name: name});
+            return _.findWhere(storedArtists, {name: name});
         }
     };
 });
