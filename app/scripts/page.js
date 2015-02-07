@@ -64,7 +64,7 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
         // This uses a data service getter function to retrieve the correct artist per CD
         if (storedArtists && storedCds) {
             storedCds.forEach(function iterateStoredCds(cd) {
-                self.cds.push(new CdViewModel(cd.album, dataServiceLayer.getCdArtist(cd), cd.releaseDate));
+                self.cds.push(new CdViewModel(cd.album, cd.artist, cd.releaseDate));
             });
         }
 
@@ -78,9 +78,9 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
         };
 
         self.addCd = function() {
-            var artistRef = dataServiceLayer.getArtistByName(self.cdForm.artistInput());
+            var artistRef = (self.cdForm.artistInput()) ? dataServiceLayer.getArtistByName(self.cdForm.artistInput()) : null;
             self.cds.push(new CdViewModel(self.cdForm.albumInput(), artistRef, self.cdForm.releaseDateInput()));
-            dataServiceLayer.saveArtistsAndCds();
+            dataServiceLayer.addToCdStorage();
             self.cdForm.hide();
             self.cdForm.resetForm();
         };
@@ -103,7 +103,7 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
 
         self.removeCd = function(cd) {
             self.cds.remove(cd);
-            dataServiceLayer.saveArtistsAndCds();
+            dataServiceLayer.removeCdFromStorage(cd);
             if (self.cds().length < 1) {
                 self.clearStorage();
             }

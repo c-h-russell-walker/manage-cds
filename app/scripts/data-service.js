@@ -1,7 +1,10 @@
 'use strict';
-define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewModel) {
-    return function DataService(CdPageViewModel) {
-        var self = this;
+define(['knockout', 'underscore', './cd', './artist'],
+        function(ko, _, CdViewModel, ArtistViewModel) {
+    return function DataService(CdModelCollection) {
+        var self = this,
+            storedCds,
+            storedArtists;
         
         self.preloadCds = function() {
             var tempDdf,
@@ -11,20 +14,20 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
                 tempDdf = new ArtistViewModel('DDF');
                 tempNumber12 = new ArtistViewModel('Number 12');
                 tempTheFaulty = new ArtistViewModel('The Faulty');
-                CdPageViewModel.artists.push(tempDdf);
-                CdPageViewModel.artists.push(tempNumber12);
-                CdPageViewModel.artists.push(tempTheFaulty);
+                CdModelCollection.artists.push(tempDdf);
+                CdModelCollection.artists.push(tempNumber12);
+                CdModelCollection.artists.push(tempTheFaulty);
             }
 
             if (!localStorage.getItem('CdCollection')) {
-                CdPageViewModel.cds.push(new CdViewModel('Means to an End', tempDdf, '2000'));
-                CdPageViewModel.cds.push(new CdViewModel('Mongrel', tempNumber12, '2007'));
-                CdPageViewModel.cds.push(new CdViewModel('The Kids are Ready', tempTheFaulty, '2003'));
+                CdModelCollection.cds.push(new CdViewModel('Means to an End', tempDdf, '2000'));
+                CdModelCollection.cds.push(new CdViewModel('Mongrel', tempNumber12, '2007'));
+                CdModelCollection.cds.push(new CdViewModel('The Kids are Ready', tempTheFaulty, '2003'));
             }
 
-            localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+            localStorage.setItem('ArtistCollection', ko.toJSON(CdModelCollection.artists()));
 
-            localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
+            localStorage.setItem('CdCollection', ko.toJSON(CdModelCollection.cds()));
         };
 
         self.clearStorage = function() {
@@ -32,100 +35,127 @@ define(['knockout', './cd', './artist'], function(ko, CdViewModel, ArtistViewMod
             localStorage.removeItem('ArtistCollection');
         };
 
-        self.getCdArtist = function(cd) {
-            var storedArtists = self.getStoredArtists(),
-                returnArtist;
-            storedArtists.forEach(function iterateStoredArtistsToGetArtistFromCd(artist) {
-                if (cd.artist && cd.artist.name === artist.name) {
-                    returnArtist = artist;
-                }
-            });
-            return returnArtist;
-        };
-
+        /* This is now just a wrapper to publicly access our newly written finder function */
         self.getArtistByName = function(name) {
-            var storedArtists = self.getStoredArtists(),
-                returnArtist;
-            storedArtists.forEach(function iterateStoredArtistsToGetArtistByName(artist) {
-                if (name === artist.name) {
-                    returnArtist = artist;
-                }
-            });
-            return returnArtist;
+            return findArtistByName(name);
         };
 
-        self.updateCdLocalStorage = function(form, oldAlbumName) {
-            var storedCds = self.getStoredCds();
-            storedCds.forEach(function iterateStoredCds(cd) {
-                if (cd.album === oldAlbumName) {
-                    cd.album = form.cd.album();
-                    cd.artist = form.cd.artist;
-                    cd.releaseDate = form.cd.releaseDate();
-                }
-            });
+        self.updateCdStorage = function(form, oldAlbumName) {
+            confirmStorageSynced();
+            var cd = findCdByAlbumName(oldAlbumName);
 
-            localStorage.setItem('CdCollection', ko.toJSON(storedCds));
+            if (!cd) {
+                throw new Error('Hmm, can\'t be updating an album if we don\'t even have it.');
+            }
+
+            cd.album = form.cd.album();
+            cd.artist = form.cd.artist;
+            cd.releaseDate = form.cd.releaseDate();
+
+            localStorage.setItem('CdCollection', ko.toJSON(self.getStoredCds()));
         };
 
-        self.updateArtistLocalStorage = function(form, oldArtistName) {
-            var storedArtists = self.getStoredArtists(),
-                storedCds = self.getStoredCds();
-            
-            storedArtists.forEach(function iterateStoredArtists(artist) {
-                if (artist.name === oldArtistName) {
-                    artist.name = form.artist.name();
-                }
-            });
+        self.addToCdStorage = function() {
+            localStorage.removeItem('CdCollection');
+            self.saveArtistsAndCds();
+        };
+
+        self.updateArtistStorage = function(form, oldArtistName) {
+            var artistRef;
+            // Set new name
+            artistRef = findArtistByName(oldArtistName);
+            if (!artistRef) {
+                throw new Error('Hmm, can\'t be updating an artist if we don\'t even have it.');
+            }
+            artistRef.name = form.artist.name();
 
             // We also need to update the values for any albums that have that artist
-            storedCds.forEach(function iterateStoredCdsForArtistUpdate(cd) {
-                if (cd.artist.name === oldArtistName) {
-                    cd.artist.name = form.artist.name();
-                }
+            var cds = findCdsByArtistName(oldArtistName);
+            if (!cds) {
+                throw new Error('Hmm, something went wrong while trying to get CDs by an artist.');
+            }
+            _.each(cds, function updateArtistName(cd) {
+                cd.artist.name = form.artist.name();
             });
 
-            localStorage.setItem('ArtistCollection', ko.toJSON(storedArtists));
-            localStorage.setItem('CdCollection', ko.toJSON(storedCds));
+            localStorage.setItem('ArtistCollection', ko.toJSON(self.getStoredArtists()));
+            localStorage.setItem('CdCollection', ko.toJSON(self.getStoredCds()));
         };
 
         self.getStoredCds = function() {
-            return JSON.parse(localStorage.getItem('CdCollection'));
+            storedCds = storedCds || JSON.parse(localStorage.getItem('CdCollection'));
+            return storedCds;
         };
 
         self.getStoredArtists = function() {
-            return JSON.parse(localStorage.getItem('ArtistCollection'));
+            storedArtists = storedArtists || JSON.parse(localStorage.getItem('ArtistCollection'));
+            return storedArtists;
         };
 
         self.saveArtistsAndCds = function() {
-            self.clearStorage();
-            localStorage.setItem('CdCollection', ko.toJSON(CdPageViewModel.cds()));
-            localStorage.setItem('ArtistCollection', ko.toJSON(CdPageViewModel.artists()));
+            localStorage.setItem('CdCollection', ko.toJSON(CdModelCollection.cds()));
+            localStorage.setItem('ArtistCollection', ko.toJSON(CdModelCollection.artists()));
+            confirmStorageSynced();
+        };
+
+        self.removeCdFromStorage = function(staleCd) {
+            storedCds = _.filter(storedCds, function(cd) {
+                return cd.album !== staleCd.album();
+            });
+            confirmStorageSynced();
         };
 
         self.saveCd = function(form) {
-            var storedArtists = self.getStoredArtists(),
-                artistRef,
+            confirmStorageSynced();
+
+            var artistRef,
                 oldAlbumName = form.cd.album();
             
             form.cd.album(form.albumInput());
-            
-            storedArtists.forEach(function iterateStoredArtistsDuringCdSave(artist) {
-                if (artist.name === form.artistInput()) {
-                    artistRef = artist;
-                }
-            });
+
+            artistRef = findArtistByName(form.artistInput());
+
+            // artistRef can be undefined if no artist is listed when updating a CD
             form.cd.artist(artistRef);
             form.cd.releaseDate(form.releaseDateInput());
             
-            self.updateCdLocalStorage(form, oldAlbumName);
+            self.updateCdStorage(form, oldAlbumName);
         };
 
         self.saveArtist = function(form) {
             var oldArtistName = form.artist.name();
             form.artist.name(form.nameInput());
 
-            self.updateArtistLocalStorage(form, oldArtistName);
+            self.updateArtistStorage(form, oldArtistName);
         };
 
+        /* Local functions */
+
+        function confirmStorageSynced() {
+            if (CdModelCollection.cds().length !== JSON.parse(localStorage.getItem('CdCollection').length)) {
+                storedCds = null;
+                storedCds = self.getStoredCds();
+                localStorage.setItem('CdCollection', ko.toJSON(CdModelCollection.cds()));
+            }
+            if (CdModelCollection.artists().length !== JSON.parse(localStorage.getItem('ArtistCollection').length)) {
+                storedArtists = null;
+                storedArtists = self.getStoredArtists();
+                localStorage.setItem('ArtistCollection', ko.toJSON(CdModelCollection.artists()));
+            }
+        }
+
+        function findCdByAlbumName(albumName) {
+            return _.findWhere(storedCds, {album: albumName});
+        }
+
+        function findCdsByArtistName(name) {
+            return _.filter(storedCds, function cdArtistNameEquality(cd) {
+                return cd.artist.name === name;
+            });
+        }
+
+        function findArtistByName(name) {
+            return _.findWhere(storedArtists, {name: name});
+        }
     };
 });
