@@ -1,9 +1,8 @@
 'use strict';
-define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-form', './artist-form'],
-        function(ko, Emitter, DataService, CdViewModel, ArtistViewModel, CdFormViewModel, ArtistFormViewModel) {
-    return function CdPageViewModel() {
+define(['knockout', 'tinyEmitter', './cd', './artist', './cd-form', './artist-form'],
+        function(ko, Emitter, CdViewModel, ArtistViewModel, CdFormViewModel, ArtistFormViewModel) {
+    return function CdPageViewModel(dataServiceLayer) {
         var self = this,
-            dataServiceLayer = new DataService(self),
             emitter = new Emitter();
 
         self.cdManager = ko.observable(true);
@@ -48,7 +47,7 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
         });
 
         self.preloadCds = function() {
-            dataServiceLayer.preloadCds();
+            dataServiceLayer.preloadCds(self);
         };
 
         var storedCds = dataServiceLayer.getStoredCds(),
@@ -80,7 +79,7 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
         self.addCd = function() {
             var artistRef = dataServiceLayer.getArtistByName(self.cdForm.artistInput());
             self.cds.push(new CdViewModel(self.cdForm.albumInput(), artistRef, self.cdForm.releaseDateInput()));
-            dataServiceLayer.saveArtistsAndCds();
+            dataServiceLayer.saveArtistsAndCds(self);
             self.cdForm.hide();
             self.cdForm.resetForm();
         };
@@ -96,14 +95,14 @@ define(['knockout', 'tinyEmitter', './data-service', './cd', './artist', './cd-f
 
         self.addArtist = function() {
             self.artists.push(new ArtistViewModel(self.artistForm.nameInput()));
-            dataServiceLayer.saveArtistsAndCds();
+            dataServiceLayer.saveArtistsAndCds(self);
             self.artistForm.hide();
             self.artistForm.resetForm();
         };
 
         self.removeCd = function(cd) {
             self.cds.remove(cd);
-            dataServiceLayer.saveArtistsAndCds();
+            dataServiceLayer.saveArtistsAndCds(self);
             if (self.cds().length < 1) {
                 self.clearStorage();
             }
